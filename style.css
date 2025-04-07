@@ -1,0 +1,1089 @@
+/* 定義科技主題變量 */
+:root {
+    --main-bg-color: #040b19;
+    --header-color: #051425;
+    --panel-bg: rgba(6, 23, 45, 0.7);
+    --panel-border: rgba(0, 210, 255, 0.5);
+    --text-color: #e0f7ff;
+    --accent-blue: #00e5ff;
+    --accent-blue-glow: rgba(0, 229, 255, 0.5);
+    --accent-green: #00ff9d;
+    --accent-green-glow: rgba(0, 255, 157, 0.5);
+    --accent-purple: #c961ff;
+    --accent-purple-glow: rgba(201, 97, 255, 0.5);
+    --accent-pink: #ff61dc;
+    --accent-orange: #ffae00;
+    --dark-blue: #061c38;
+
+    /* 多彩螢光色彩 */
+    --glow-blue: #00e5ff;
+    --glow-blue-bg: rgba(0, 229, 255, 0.7);
+    --glow-blue-bg-light: rgba(0, 229, 255, 0.3);
+    
+    --glow-green: #00ff9d;
+    --glow-green-bg: rgba(0, 255, 157, 0.7);
+    --glow-green-bg-light: rgba(0, 255, 157, 0.3);
+    
+    --glow-yellow: #ffd600;
+    --glow-yellow-bg: rgba(255, 214, 0, 0.7);
+    --glow-yellow-bg-light: rgba(255, 214, 0, 0.3);
+    
+    --glow-pink: #ff52ab;
+    --glow-pink-bg: rgba(255, 82, 171, 0.7);
+    --glow-pink-bg-light: rgba(255, 82, 171, 0.3);
+    
+    --glow-purple: #9b59ff;
+    --glow-purple-bg: rgba(155, 89, 255, 0.7);
+    --glow-purple-bg-light: rgba(155, 89, 255, 0.3);
+}
+
+/* 全局字體設定 */
+body, input, select, button, textarea, label, p, span, div, h1, h2, h3, h4, h5, h6 {
+    font-family: 'Rajdhani', "Microsoft YaHei", Arial, sans-serif;
+    color: var(--text-color);
+    letter-spacing: 0.5px;
+    font-weight: 400;
+}
+
+/* 科技感背景設定 */
+body {
+    margin: 0;
+    background-color: var(--main-bg-color);
+    color: var(--text-color);
+    overflow-x: hidden;
+    background-image: radial-gradient(circle at 50% 50%, #0c2850 0%, #040b19 100%);
+}
+
+/* 粒子背景 */
+#particles-js {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+/* 主容器背景 */
+.dashboard-container {
+    width: 100%;
+    padding: 15px;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1;
+    transition: padding 0.3s ease;
+}
+
+/* 頭部設計 */
+.header {
+    background-color: var(--header-color);
+    border-top: 1px solid var(--accent-blue);
+    border-bottom: 1px solid var(--accent-blue);
+    padding: 12px 0;
+    text-align: center;
+    position: relative;
+    margin-bottom: 25px;
+    box-shadow: 0 0 30px var(--accent-blue-glow);
+    overflow: hidden;
+    border-radius: 2px;
+}
+
+.header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, 
+        transparent 0%, 
+        var(--accent-blue) 20%, 
+        var(--accent-blue) 80%, 
+        transparent 100%);
+    animation: scanline 3s linear infinite;
+}
+
+@keyframes scanline {
+    0% {
+        transform: translateY(0);
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 0.2;
+    }
+    100% {
+        transform: translateY(100px);
+        opacity: 0.5;
+    }
+}
+
+.header h1 {
+    font-size: 28px;
+    margin: 0;
+    color: var(--text-color);
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    background: linear-gradient(to right, #00e5ff, #00ff9d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+}
+
+.header::before, .header::after {
+    content: "••••••••";
+    color: var(--accent-blue);
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    letter-spacing: 10px;
+}
+
+.header::before {
+    left: 20%;
+}
+
+.header::after {
+    right: 20%;
+}
+
+.header .logo {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent-blue);
+    font-size: 20px;
+    font-weight: bold;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.7; }
+    50% { opacity: 1; }
+    100% { opacity: 0.7; }
+}
+
+.header .datetime {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: var(--accent-blue);
+    padding: 4px 10px;
+    border: 1px solid var(--accent-blue);
+    border-radius: 4px;
+    background-color: rgba(0, 229, 255, 0.1);
+    box-shadow: 0 0 10px var(--accent-blue-glow);
+}
+
+/* 網格布局 */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 20px;
+    perspective: 1000px;
+}
+
+/* 面板通用樣式 */
+.panel {
+    background-color: var(--panel-bg);
+    border-radius: 8px;
+    padding: 20px;
+    position: relative;
+    backdrop-filter: blur(5px);
+    border: 1px solid var(--panel-border);
+    box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
+    overflow: hidden;
+    transform-style: preserve-3d;
+    animation: panelFadeIn 0.5s ease-out forwards;
+    opacity: 0;
+    transition: padding 0.3s ease, margin 0.3s ease;
+}
+
+@keyframes panelFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.panel::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--accent-blue), transparent);
+}
+
+.panel::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    background: linear-gradient(to top, rgba(0, 229, 255, 0.05), transparent);
+    pointer-events: none;
+}
+
+.panel-title {
+    position: relative;
+    font-size: 16px;
+    margin-bottom: 20px;
+    padding-left: 30px;
+    display: flex;
+    align-items: center;
+    color: var(--accent-blue);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.panel-title::before {
+    content: "⊙";
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-blue);
+    animation: rotate 4s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* KPI卡片樣式 */
+.kpi-card {
+    background-color: rgba(255, 174, 0, 0.1);
+    border: 1px solid var(--accent-orange);
+    border-radius: 5px;
+    padding: 10px 18px;
+    margin: 12px 0;
+    color: white;
+    text-align: center;
+    min-width: 140px;
+    position: relative;
+    box-shadow: 0 0 15px rgba(255, 174, 0, 0.2);
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+}
+
+.kpi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(255, 174, 0, 0.3);
+}
+
+.kpi-card::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid var(--accent-orange);
+}
+
+.kpi-card.blue {
+    background-color: rgba(0, 229, 255, 0.1);
+    border: 1px solid var(--accent-blue);
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+}
+
+.kpi-card.blue:hover {
+    box-shadow: 0 5px 20px rgba(0, 229, 255, 0.3);
+}
+
+.kpi-card.blue::after {
+    border-top-color: var(--accent-blue);
+}
+
+.kpi-card.green {
+    background-color: rgba(0, 255, 157, 0.1);
+    border: 1px solid var(--accent-green);
+    box-shadow: 0 0 15px rgba(0, 255, 157, 0.2);
+}
+
+.kpi-card.green:hover {
+    box-shadow: 0 5px 20px rgba(0, 255, 157, 0.3);
+}
+
+.kpi-card.green::after {
+    border-top-color: var(--accent-green);
+}
+
+.kpi-card .value {
+    font-size: 22px;
+    font-weight: 700;
+    margin-top: 5px;
+}
+
+.kpi-card .label {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+/* 表格樣式 */
+.tech-table {
+    width: 100%;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+}
+
+.tech-table th {
+    background: linear-gradient(45deg, rgba(0, 60, 120, 0.8), rgba(0, 40, 80, 0.8));
+    border-bottom: 2px solid var(--accent-blue);
+    color: var(--accent-blue);
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 12px;
+    font-size: 14px;
+    text-shadow: 0 0 8px rgba(0, 229, 255, 0.8);
+    text-align: center;
+}
+
+.tech-table td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(0, 229, 255, 0.1);
+    background-color: rgba(6, 28, 56, 0.4);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.tech-table tr:hover td {
+    background-color: rgba(0, 229, 255, 0.15);
+    transform: scale(1.01);
+}
+
+/* 表格中最佳表現行樣式 */
+.tech-table tr.best-performance td {
+    background-color: rgba(0, 255, 157, 0.15);
+    border-bottom: 1px solid rgba(0, 255, 157, 0.3);
+}
+
+.tech-table tr.best-performance:hover td {
+    background-color: rgba(0, 255, 157, 0.25);
+}
+
+/* 按鈕樣式 */
+.btn-tech {
+    background-color: rgba(0, 229, 255, 0.1);
+    border: 1px solid var(--accent-blue);
+    color: var(--accent-blue);
+    padding: 8px 15px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-tech:hover {
+    background-color: rgba(0, 229, 255, 0.2);
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+    color: var(--accent-blue);
+}
+
+.btn-tech.btn-nav {
+    width: 100%;
+    text-align: left;
+}
+
+.btn-tech.btn-nav.active {
+    background-color: rgba(0, 229, 255, 0.3);
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
+}
+
+/* 科技框架元素 */
+.tech-frame {
+    position: absolute;
+    pointer-events: none;
+}
+
+.tech-frame.top-left {
+    top: 10px;
+    left: 10px;
+    width: 20px;
+    height: 20px;
+    border-top: 2px solid var(--accent-blue);
+    border-left: 2px solid var(--accent-blue);
+}
+
+.tech-frame.top-right {
+    top: 10px;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+    border-top: 2px solid var(--accent-blue);
+    border-right: 2px solid var(--accent-blue);
+}
+
+.tech-frame.bottom-left {
+    bottom: 10px;
+    left: 10px;
+    width: 20px;
+    height: 20px;
+    border-bottom: 2px solid var(--accent-blue);
+    border-left: 2px solid var(--accent-blue);
+}
+
+.tech-frame.bottom-right {
+    bottom: 10px;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+    border-bottom: 2px solid var(--accent-blue);
+    border-right: 2px solid var(--accent-blue);
+}
+
+/* 閃光效果 */
+.shimmer-effect {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg, 
+        transparent 0%, 
+        rgba(255, 255, 255, 0.05) 50%, 
+        transparent 100%
+    );
+    animation: shimmer 3s infinite;
+    pointer-events: none;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(200%); }
+}
+
+/* 數據點效果 */
+.data-point {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: var(--accent-blue);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--accent-blue-glow);
+    z-index: 4;
+    animation: blink 2s infinite;
+}
+
+@keyframes blink {
+    0% { opacity: 0.4; }
+    50% { opacity: 1; }
+    100% { opacity: 0.4; }
+}
+
+/* 數據加載指示器 */
+.data-loading {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--accent-green);
+    box-shadow: 0 0 10px var(--accent-green-glow);
+    animation: blink 1.5s infinite;
+}
+
+/* 圓形加載指示器 */
+.loading-circle {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top: 2px solid var(--accent-blue);
+    border-right: 2px solid var(--accent-green);
+    animation: spin 3s linear infinite;
+    z-index: 3;
+}
+
+.loading-circle.top-right {
+    top: 15px;
+    right: 15px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 掃描線效果 */
+.scan-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--accent-blue);
+    opacity: 0.5;
+    filter: blur(1px);
+    animation: scanMove 3s infinite linear;
+    z-index: 10;
+}
+
+/* 表單元素樣式 */
+.form-control, .form-select {
+    background-color: rgba(6, 28, 56, 0.7);
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    color: var(--text-color);
+    border-radius: 4px;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: rgba(6, 28, 56, 0.8);
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+    color: var(--text-color);
+}
+
+.form-check-input {
+    background-color: rgba(6, 28, 56, 0.7);
+    border: 1px solid rgba(0, 229, 255, 0.5);
+}
+
+.form-check-input:checked {
+    background-color: var(--accent-blue);
+    border-color: var(--accent-blue);
+}
+
+.input-group-text {
+    background-color: rgba(0, 229, 255, 0.1);
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    color: var(--accent-blue);
+}
+
+/* 進度條美化 */
+.tech-progress {
+    height: 10px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 15px 0;
+    border: 1px solid rgba(0, 229, 255, 0.5);
+}
+
+.tech-progress .progress-bar {
+    background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+    box-shadow: 0 0 10px var(--accent-blue-glow);
+}
+
+/* 科技卡片 */
+.tech-card {
+    background-color: rgba(6, 23, 45, 0.7);
+    border: 1px solid var(--panel-border);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.tech-card-header {
+    background-color: rgba(0, 229, 255, 0.1);
+    padding: 12px 15px;
+    color: var(--accent-blue);
+    font-weight: 600;
+    position: relative;
+    overflow: hidden;
+}
+
+.tech-card-header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--accent-blue), transparent);
+}
+
+/* 新增：計算分析按鈕特殊樣式 */
+.btn-tech-action {
+    background: linear-gradient(45deg, rgba(0, 229, 255, 0.3), rgba(0, 255, 157, 0.3));
+    color: var(--text-color);
+    border: 1px solid var(--accent-blue);
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
+    text-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
+}
+
+.btn-tech-action:hover {
+    background: linear-gradient(45deg, rgba(0, 229, 255, 0.5), rgba(0, 255, 157, 0.5));
+    box-shadow: 0 0 30px rgba(0, 229, 255, 0.7);
+    transform: translateY(-2px);
+}
+
+.btn-tech-action:active {
+    transform: translateY(1px);
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+}
+
+/* 浮動資訊面板 */
+.floating-panel {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    width: 350px;
+    border-radius: 8px;
+    background-color: rgba(6, 28, 56, 0.8);
+    border: 1px solid var(--accent-blue);
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+    overflow: hidden;
+    z-index: 1000;
+    display: none !important;
+}
+
+.floating-panel-header {
+    background-color: rgba(0, 229, 255, 0.2);
+    padding: 10px 15px;
+    color: var(--accent-blue);
+    font-weight: bold;
+}
+
+.floating-panel-body {
+    padding: 15px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.typing-animation {
+    border-right: 2px solid var(--accent-blue);
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    animation: typing 0.5s steps(1) infinite;
+}
+
+@keyframes typing {
+    0% { border-color: transparent; }
+    50% { border-color: var(--accent-blue); }
+    100% { border-color: transparent; }
+}
+
+/* 其他新增樣式 */
+.tech-section-title {
+    color: var(--accent-blue);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.tech-pills {
+    border: 1px solid var(--accent-blue);
+    border-radius: 30px;
+    padding: 5px;
+    background-color: rgba(6, 28, 56, 0.5);
+}
+
+.tech-pills .nav-link {
+    color: var(--text-color);
+    border-radius: 25px;
+    padding: 8px 15px;
+    margin: 2px 5px;
+    font-size: 14px;
+}
+
+.tech-pills .nav-link.active {
+    background: linear-gradient(45deg, var(--accent-blue), var(--accent-green));
+    color: #000;
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+}
+
+/* 報告區塊樣式 */
+.tech-badge {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* 新增指示器標籤 */
+.data-badge {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+}
+
+.data-badge .badge {
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 15px;
+}
+
+.tech-tabs .nav-link {
+    background-color: rgba(6, 28, 56, 0.5);
+    border: none;
+    color: var(--text-color);
+    margin-right: 5px;
+    padding: 10px 20px;
+}
+
+.tech-tabs .nav-link.active {
+    background: linear-gradient(45deg, rgba(0, 229, 255, 0.2), rgba(0, 255, 157, 0.2));
+    color: var(--accent-blue);
+    border: none;
+    border-bottom: 2px solid var(--accent-blue);
+}
+
+/* 脈動圖標效果 */
+.pulse-icon {
+    animation: iconPulse 2s infinite;
+}
+
+@keyframes iconPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* 圖表增強容器 */
+.chart-container {
+    position: relative;
+    padding: 15px;
+    background-color: rgba(6, 28, 56, 0.4);
+    border-radius: 8px;
+    border: 1px solid rgba(0, 229, 255, 0.2);
+    box-shadow: inset 0 0 20px rgba(0, 229, 255, 0.1);
+    overflow: hidden;
+    margin-bottom: 20px;
+    min-height: 300px;
+}
+
+.chart-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--accent-blue), transparent);
+    z-index: 1;
+}
+
+.chart-container::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--accent-blue), transparent);
+    z-index: 1;
+}
+
+/* 漸變邊框和螢光效果 */
+.glow-border-blue {
+    position: relative;
+    border: 1px solid var(--glow-blue);
+    box-shadow: 0 0 15px var(--glow-blue-bg);
+}
+
+.glow-border-green {
+    position: relative;
+    border: 1px solid var(--glow-green);
+    box-shadow: 0 0 15px var(--glow-green-bg);
+}
+
+.glow-border-yellow {
+    position: relative;
+    border: 1px solid var(--glow-yellow);
+    box-shadow: 0 0 15px var(--glow-yellow-bg);
+}
+
+.glow-border-pink {
+    position: relative;
+    border: 1px solid var(--glow-pink);
+    box-shadow: 0 0 15px var(--glow-pink-bg);
+}
+
+.glow-border-purple {
+    position: relative;
+    border: 1px solid var(--glow-purple);
+    box-shadow: 0 0 15px var(--glow-purple-bg);
+}
+
+/* 增加配息累積效益表格樣式 */
+#cumulativeDividendTable {
+    margin-top: 20px;
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#cumulativeDividendTable th {
+    background: linear-gradient(45deg, rgba(0, 255, 157, 0.2), rgba(0, 229, 255, 0.2));
+    padding: 12px;
+    text-align: center;
+    border-bottom: 2px solid var(--glow-green);
+    color: var(--glow-green);
+    font-weight: bold;
+    text-shadow: 0 0 8px rgba(0, 255, 157, 0.8);
+}
+
+#cumulativeDividendTable td {
+    padding: 12px;
+    text-align: center;
+    background-color: rgba(0, 50, 80, 0.3);
+    border-bottom: 1px solid rgba(0, 255, 157, 0.2);
+}
+
+/* 醫療保障無數據提示樣式 */
+.no-data-message {
+    text-align: center;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    margin: 15px 0;
+    color: var(--text-color);
+    border: 1px dashed rgba(255, 255, 255, 0.3);
+}
+
+/* 綜合評分表格增強 */
+#overallTable th {
+    background: linear-gradient(45deg, rgba(155, 89, 255, 0.2), rgba(0, 229, 255, 0.2));
+    border-bottom: 2px solid var(--glow-purple);
+    color: var(--glow-purple);
+    text-shadow: 0 0 8px rgba(155, 89, 255, 0.8);
+}
+
+#overallTable td {
+    background-color: rgba(6, 28, 56, 0.4);
+}
+
+/* 表格比較基準說明 */
+.comparison-base-info {
+    background-color: rgba(0, 229, 255, 0.1);
+    border: 1px solid var(--glow-blue);
+    border-radius: 6px;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    color: var(--text-color);
+    text-shadow: 0 0 5px rgba(0, 229, 255, 0.5);
+    font-size: 14px;
+}
+
+.comparison-base-info i {
+    color: var(--glow-blue);
+    margin-right: 8px;
+}
+
+/* 新增配息累積效益表格容器 */
+.dividend-accumulation-container {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: rgba(0, 50, 80, 0.3);
+    border-radius: 8px;
+    border: 1px solid rgba(0, 255, 157, 0.3);
+    box-shadow: 0 0 15px rgba(0, 255, 157, 0.1);
+}
+
+.dividend-accumulation-container h5 {
+    color: var(--glow-green);
+    margin-bottom: 15px;
+    font-size: 16px;
+    text-shadow: 0 0 5px rgba(0, 255, 157, 0.5);
+}
+
+/* iPad 專用響應式調整 */
+@media (min-width: 768px) and (max-width: 1024px) {
+    /* 通用iPad優化 */
+    body {
+        font-size: 16px;
+    }
+    
+    .tech-card, .panel {
+        transition: all 0.3s ease;
+    }
+    
+    .btn {
+        min-height: 44px;
+    }
+    
+    .form-control, .form-select {
+        min-height: 44px;
+        font-size: 16px;
+    }
+    
+    /* 改善觸控體驗 */
+    .nav-tabs .nav-link {
+        padding: 12px 20px;
+    }
+    
+    .tech-pills .nav-link {
+        padding: 10px 18px;
+    }
+    
+    /* 觸控友好的表格 */
+    .tech-table td, .tech-table th {
+        padding: 15px 10px;
+    }
+}
+
+/* iPad 橫向佈局 */
+@media (min-width: 900px) and (max-width: 1200px) and (orientation: landscape) {
+    .dashboard-grid {
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 15px;
+    }
+    
+    .row {
+        margin-left: -10px;
+        margin-right: -10px;
+    }
+    
+    .col-md-6 {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    .header h1 {
+        font-size: 26px;
+    }
+    
+    /* 橫向模式下優化圖表尺寸 */
+    .chart-container {
+        height: 350px !important;
+    }
+    
+    /* 並排顯示相關面板 */
+    .landscape-flex {
+        display: flex;
+        gap: 15px;
+    }
+    
+    .landscape-flex > div {
+        flex: 1;
+    }
+}
+
+/* iPad 縱向佈局 */
+@media (min-width: 768px) and (max-width: 899px) and (orientation: portrait) {
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 12px;
+    }
+    
+    .header h1 {
+        font-size: 22px;
+    }
+    
+    .tech-card-header {
+        padding: 10px 12px;
+    }
+    
+    .tech-frame {
+        width: 15px;
+        height: 15px;
+    }
+    
+    /* 垂直排列面板 */
+    .chart-container {
+        height: 300px !important;
+    }
+    
+    /* 縱向模式下優化表格 */
+    .tech-table {
+        font-size: 14px;
+    }
+    
+    /* 縱向時更緊湊的表單 */
+    .form-group {
+        margin-bottom: 10px;
+    }
+}
+
+/* 安全區域適配 - 兼容 iPhone X 及以上劉海屏幕 */
+@supports (padding: max(0px)) {
+    .dashboard-container {
+        padding-left: max(15px, env(safe-area-inset-left));
+        padding-right: max(15px, env(safe-area-inset-right));
+    }
+    
+    .header {
+        padding-top: max(12px, env(safe-area-inset-top));
+    }
+}
+
+/* 方向變化動畫 */
+.rotate-animation {
+    transition: all 0.5s ease;
+}
+
+/* 設備類別特定樣式 */
+.ipad-device .btn {
+    border-radius: 8px;
+}
+
+.ipad-device .form-control,
+.ipad-device .form-select {
+    border-radius: 8px;
+}
+
+/* 觸控友好的互動元素 */
+.ipad-device .nav-link,
+.ipad-device .btn,
+.ipad-device .form-check-label,
+.ipad-device .form-check-input {
+    cursor: pointer;
+    -webkit-touch-callout: none;
+}
+
+/* 減少在觸控設備上的懸停效果，改為激活狀態 */
+@media (hover: none) {
+    .btn-tech:hover {
+        background-color: rgba(0, 229, 255, 0.1);
+        box-shadow: none;
+    }
+    
+    .btn-tech:active {
+        background-color: rgba(0, 229, 255, 0.2);
+        box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+    }
+    
+    .tech-table tr:hover td {
+        background-color: rgba(6, 28, 56, 0.4);
+        transform: none;
+    }
+    
+    .tech-table tr:active td {
+        background-color: rgba(0, 229, 255, 0.15);
+    }
+}
