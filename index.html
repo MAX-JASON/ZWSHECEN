@@ -4,14 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>台灣儲蓄險分析系統 3.0</title>
-    <!-- PWA 相關標籤 -->
+    <!-- PWA 相關標籤 - 優化iPad體驗 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="儲蓄險分析">
+    
+    <!-- 應用圖標 - 新設計 -->
     <link rel="apple-touch-icon" href="icons/icon-152.png">
     <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
     <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png">
     <link rel="apple-touch-icon" sizes="167x167" href="icons/icon-167.png">
+    
+    <!-- iPad啟動畫面 -->
+    <link rel="apple-touch-startup-image" 
+          media="screen and (device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" 
+          href="icons/splash/ipad-10.9-portrait.png">
+    <link rel="apple-touch-startup-image" 
+          media="screen and (device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" 
+          href="icons/splash/ipad-10.9-landscape.png">
+    <link rel="apple-touch-startup-image" 
+          media="screen and (device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" 
+          href="icons/splash/ipad-9.7-portrait.png">
+    <link rel="apple-touch-startup-image" 
+          media="screen and (device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" 
+          href="icons/splash/ipad-9.7-landscape.png">
+    
     <meta name="theme-color" content="#040b19">
     <link rel="manifest" href="manifest.json">
     <!-- 原有樣式表 -->
@@ -139,32 +156,56 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #040b19;
+            background: linear-gradient(145deg, #040b19 0%, #0a2a4a 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 10000;
-            transition: opacity 0.5s;
+            transition: opacity 0.8s;
         }
         
         .splash-logo {
-            width: 150px;
-            height: 150px;
-            margin-bottom: 20px;
-            border-radius: 30px;
+            width: 180px;
+            height: 180px;
+            margin-bottom: 25px;
+            border-radius: 40px;
             background: linear-gradient(45deg, #061c38, #0a2a4a);
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 0 30px rgba(0, 229, 255, 0.5);
+            box-shadow: 0 0 40px rgba(0, 229, 255, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .splash-logo::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 2s infinite;
         }
         
         .splash-logo i {
-            font-size: 80px;
+            font-size: 90px;
             color: #00e5ff;
-            text-shadow: 0 0 20px rgba(0, 229, 255, 0.8);
-            animation: pulse 2s infinite;
+            text-shadow: 0 0 25px rgba(0, 229, 255, 0.9);
+            animation: glow 2.5s infinite;
+        }
+        
+        @keyframes glow {
+            0% { filter: drop-shadow(0 0 15px rgba(0, 229, 255, 0.7)); }
+            50% { filter: drop-shadow(0 0 30px rgba(0, 229, 255, 1)); }
+            100% { filter: drop-shadow(0 0 15px rgba(0, 229, 255, 0.7)); }
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
         
         .splash-text {
@@ -205,6 +246,41 @@
             color: rgba(224, 247, 255, 0.5);
             font-size: 14px;
             margin-top: 20px;
+        }
+
+        /* 方向變化反饋提示 */
+        .orientation-feedback {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 229, 255, 0.9);
+            color: #040b19;
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 18px;
+            z-index: 10000;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.7);
+            text-align: center;
+            transition: opacity 0.5s;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .orientation-feedback.fade-out {
+            opacity: 0;
+        }
+        
+        .orientation-feedback i {
+            display: block;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.05); }
+            100% { transform: translate(-50%, -50%) scale(1); }
         }
     </style>
 </head>
@@ -475,7 +551,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                         
                         <form id="policyForm">
                             <!-- 保單類型選擇 - 更改預設年期 -->
@@ -1226,81 +1301,6 @@
                                             <strong>評分比較基準說明：</strong> 本評分系統以「自家保單」為基準值(10分)，計算各保單在不同維度上的相對表現。
                                             各評分項目權重分配為：報酬率(35%)、配息(25%)、醫療保障(15%)和壽險保障(25%)。
                                         </div>
-                                        
-                                        <div class="tech-card tech-card-inner glow-border-purple">
-                                            <div class="card-header tech-card-header">
-                                                <i class="fas fa-star-half-alt me-2"></i>綜合評分表
-                                                <div class="tech-border-glow"></div>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="data-badge">
-                                                    <span id="bestOverallBadge" class="badge bg-success"><i class="fas fa-crown me-1"></i>綜合最佳產品</span>
-                                                </div>
-                                                <table class="table table-striped table-hover tech-table" id="overallTable">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>保單名稱</th>
-                                                            <th>報酬評分<br><small>(35%)</small></th>
-                                                            <th>配息評分<br><small>(25%)</small></th>
-                                                            <th>醫療評分<br><small>(15%)</small></th>
-                                                            <th>壽險評分<br><small>(25%)</small></th>
-                                                            <th>綜合評分</th>
-                                                            <th>排名</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <!-- 動態生成的綜合評分表 -->
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="row mb-4">
-                                    <div class="col-md-12">
-                                        <div class="tech-card tech-card-inner glow-border-blue">
-                                            <div class="card-header tech-card-header">
-                                                <i class="fas fa-chart-radar me-2"></i>綜合評分分析
-                                                <div class="tech-border-glow"></div>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="alert alert-info" id="comprehensiveAnalysisAlert">
-                                                    <!-- 動態生成的綜合分析建議 -->
-                                                </div>
-                                                
-                                                <div class="chart-container" style="height: 400px;">
-                                                    <canvas id="radarChart"></canvas>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="d-flex justify-content-between mt-4">
-                            <button type="button" class="btn btn-tech btn-secondary" id="backToInput">
-                                <i class="fas fa-arrow-left me-2"></i>返回輸入
-                            </button>
-                            <button type="button" class="btn btn-tech btn-success" id="generateReportBtn">
-                                <i class="fas fa-file-invoice me-2"></i>生成分析報告
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- 步驟3: 分析報告 -->
-                    <div class="tab-pane fade animate__animated animate__fadeIn" id="report" role="tabpanel" aria-labelledby="report-tab">
-                        <div class="panel">
-                            <div class="tech-frame top-left"></div>
-                            <div class="tech-frame top-right"></div>
-                            <div class="tech-frame bottom-left"></div>
-                            <div class="tech-frame bottom-right"></div>
-                            <div class="shimmer-effect"></div>
-                            
-                            <!-- 報告內容 -->
-                            <div class="panel-title text-center mb-4"><i class="fas fa-file-alt me-2"></i>儲蓄險綜合分析報告</div>
-                            <div class="tech-badge mb-3">
                                 <span class="badge bg-primary text-white"><i class="fas fa-calendar-check me-1"></i><span id="reportDate"></span></span>
                                 <span class="badge bg-info text-white ms-2"><i class="fas fa-money-bill-wave me-1"></i><span id="reportCurrency">台幣 (TWD)</span></span>
                             </div>
@@ -1525,6 +1525,67 @@
                 pane.style.overflowY = 'auto';
                 pane.style.webkitOverflowScrolling = 'touch';
             });
+        }
+
+        // 確保頁籤正確初始化和切換
+        document.addEventListener('DOMContentLoaded', function() {
+            // 移除頁籤的disabled屬性，確保可以點擊
+            document.querySelectorAll('#analysisTab .nav-link').forEach(tab => {
+                tab.removeAttribute('disabled');
+            });
+            
+            // 初始化頁籤
+            const tabList = document.querySelectorAll('#analysisTab .nav-link');
+            tabList.forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // 移除所有active類
+                    tabList.forEach(t => {
+                        t.classList.remove('active');
+                        const pane = document.querySelector(t.getAttribute('data-bs-target'));
+                        if (pane) {
+                            pane.classList.remove('show', 'active');
+                        }
+                    });
+                    
+                    // 設置當前tab為active
+                    this.classList.add('active');
+                    const target = document.querySelector(this.getAttribute('data-bs-target'));
+                    if (target) {
+                        target.classList.add('show', 'active');
+                    }
+                    
+                    // 更新進度條
+                    const tabId = this.id.replace('-tab', '');
+                    updateProgressBar(tabId);
+                    
+                    // 防止頁面滾動到頂部
+                    return false;
+                });
+            });
+            
+            // 其他初始化代碼...
+            // ...existing code...
+        });
+        
+        // 頁籤切換函數 - 增強版
+        function switchTab(tabId) {
+            // 獲取對應的頁籤元素
+            const tabElement = document.getElementById(`${tabId}-tab`);
+            
+            if (tabElement) {
+                // 手動觸發點擊事件
+                tabElement.click();
+                
+                // 平滑滾動到頂部
+                setTimeout(() => {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                }, 100);
+            }
         }
     </script>
 </body>

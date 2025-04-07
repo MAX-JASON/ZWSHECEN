@@ -992,6 +992,44 @@ body {
     .landscape-flex > div {
         flex: 1;
     }
+    
+    /* 每個面板每行最多顯示兩個 */
+    .landscape-chart-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    
+    /* 確保圖表在橫向模式下有適當的高度 */
+    .chart-container {
+        height: 380px !important;
+        margin-bottom: 0;
+    }
+    
+    /* 表格在橫向模式下調整 */
+    .table-responsive {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    
+    /* 優化頁籤在橫向模式的顯示 */
+    .tech-tabs .nav-link {
+        padding: 12px 25px;
+        font-size: 16px;
+    }
+    
+    /* 報告面板橫向佈局 */
+    .report-landscape-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+    
+    /* 確保圖表寬度合理 */
+    canvas {
+        max-width: 100% !important;
+    }
 }
 
 /* iPad 縱向佈局 */
@@ -1086,4 +1124,20 @@ body {
     .tech-table tr:active td {
         background-color: rgba(0, 229, 255, 0.15);
     }
+}
+
+/* 確保頁面內容嚴格限制在頁籤內，不能滾動超出 */
+.tab-pane {
+    height: auto;
+    overflow-y: auto;
+    padding-bottom: 30px;
+}
+
+/* 修復頁籤切換問題 */
+.tab-content > .tab-pane {
+    display: none;
+}
+
+.tab-content > .active {
+    display: block;
 }

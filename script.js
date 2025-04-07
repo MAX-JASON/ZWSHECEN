@@ -1064,6 +1064,12 @@ function renderCharts() {
             return;
         }
         
+        // 檢測是否為iPad橫向模式
+        const isIPadLandscape = isIPadLandscapeMode();
+        
+        // 更新圖表容器佈局
+        adjustChartContainers(isIPadLandscape);
+        
         // 定義彩色螢光色彩組合
         const glowColors = [
             { bg: 'rgba(0, 229, 255, 0.7)', border: 'rgba(0, 229, 255, 1)' }, // 藍色
@@ -1232,9 +1238,119 @@ function renderCharts() {
             });
         }
         
+        // 圖表渲染完成後調整大小
+        setTimeout(() => {
+            resizeAllCharts();
+        }, 100);
+        
         console.log("圖表生成完成");
     } catch (error) {
         console.error("生成圖表時出錯:", error);
+    }
+}
+
+// 檢測是否為iPad橫向模式
+function isIPadLandscapeMode() {
+    const isIPad = /iPad/.test(navigator.userAgent) || 
+                   (/Macintosh/i.test(navigator.platform) && navigator.maxTouchPoints > 1);
+    
+    return isIPad && window.innerWidth > window.innerHeight;
+}
+
+// 調整圖表容器佈局，適應橫向/縱向模式
+function adjustChartContainers(isLandscape) {
+    // 對比表面板佈局調整
+    const comparisonRows = document.querySelectorAll('#comparison .row');
+    comparisonRows.forEach(row => {
+        if (isLandscape && row.querySelectorAll('.col-md-6').length === 2) {
+            row.classList.add('landscape-chart-layout');
+            row.classList.remove('row');
+        } else if (!isLandscape && row.classList.contains('landscape-chart-layout')) {
+            row.classList.remove('landscape-chart-layout');
+            row.classList.add('row');
+        }
+    });
+    
+    // 報告面板佈局調整
+    const reportRows = document.querySelectorAll('#report .row');
+    reportRows.forEach(row => {
+        if (isLandscape && row.querySelectorAll('.col-md-6').length === 2) {
+            row.classList.add('report-landscape-layout');
+            row.classList.remove('row');
+        } else if (!isLandscape && row.classList.contains('report-landscape-layout')) {
+            row.classList.remove('report-landscape-layout');
+            row.classList.add('row');
+        }
+    });
+}
+
+// 重設所有圖表大小，確保在轉向後正確顯示
+function resizeAllCharts() {
+    const chartInstances = [
+        'irrChartInstance', 
+        'dividendChartInstance', 
+        'cumulativeDividendChartInstance',
+        'medicalChartInstance',
+        'radarChartInstance', 
+        'reportChartInstance',
+        'overallChartInstance'
+    ];
+    
+    chartInstances.forEach(instanceName => {
+        if (window[instanceName]) {
+            window[instanceName].resize();
+        }
+    });
+}
+
+// 增強方向變化處理函數
+function handleOrientationChange() {
+    document.body.classList.add('orientation-change');
+    const isLandscape = checkOrientation();
+    
+    // 顯示轉向提示
+    showOrientationFeedback(isLandscape);
+    
+    // 修復頁籤切換問題
+    fixTabSwitching();
+    
+    setTimeout(function() {
+        document.body.classList.remove('orientation-change');
+        
+        // 重新佈局圖表
+        adjustChartContainers(isLandscape);
+        resizeAllCharts();
+        
+        console.log("方向變更處理完成");
+    }, 500);
+}
+
+// 顯示轉向提示
+function showOrientationFeedback(isLandscape) {
+    const feedback = document.createElement('div');
+    feedback.className = 'orientation-feedback';
+    feedback.innerHTML = `<i class="fas fa-${isLandscape ? 'expand' : 'compress'}-alt"></i> 
+                        ${isLandscape ? '橫向模式' : '縱向模式'}`;
+    
+    document.body.appendChild(feedback);
+    
+    setTimeout(() => {
+        feedback.classList.add('fade-out');
+        setTimeout(() => {
+            feedback.remove();
+        }, 500);
+    }, 1500);
+}
+
+// 修復頁籤切換問題
+function fixTabSwitching() {
+    // 獲取當前激活的頁籤
+    const activeTab = document.querySelector('#analysisTab .nav-link.active');
+    if (activeTab) {
+        // 重新激活當前頁籤
+        setTimeout(() => {
+            activeTab.click();
+        }, 50);
     }
 }
 
