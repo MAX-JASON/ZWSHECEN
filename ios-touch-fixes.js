@@ -19,45 +19,49 @@
     document.documentElement.classList.add('ios-device');
     if (isIPad) document.documentElement.classList.add('ipad-device');
     
-    // 修復iOS橡皮筋效果並添加滾動到底部自動跳轉功能
+    // 修復iOS橡皮筋效果並允許正常滑動
     function fixIOSOverscroll() {
-        // 防止body過度滾動 - 修改為更寬鬆的條件，允許更多正常滾動
-        document.body.addEventListener('touchmove', function(e) {
-            // 不再阻止所有的touchmove事件，只針對特殊情況
-            if (e.target.closest('.allow-scroll, .single-tab-content, .tab-pane, .form-control, .dashboard-container')) {
-                return; // 允許這些元素內部滾動
+        // 只阻止頁面級別的橡皮筋效果，允許容器內部正常滑動
+        document.addEventListener('touchmove', function(e) {
+            // 檢查是否為滾動容器
+            if (e.target.closest('.single-tab-content, .tab-pane, .dashboard-container, [class*="scroll"]')) {
+                return; // 允許這些元素內部滑動
             }
             
-            // 只有明確不是滾動容器的元素才阻止默認行為
-            if (!e.target.closest('*[class*="scroll"]') && e.touches.length === 1) {
+            // 只阻止頁面級別的過度滾動
+            if (e.touches.length === 1) {
                 e.preventDefault();
             }
         }, { passive: false });
         
-        // 允許滾動容器內部滾動，但使用更寬鬆的邊界檢測
-        document.querySelectorAll('.allow-scroll, .single-tab-content, .tab-pane').forEach(element => {
-            element.addEventListener('touchmove', function(e) {
-                // 移除過度嚴格的邊界檢測，只阻止明顯的過度滾動
-                const scrollTop = this.scrollTop;
-                const scrollHeight = this.scrollHeight;
-                const height = this.clientHeight;
-                const delta = e.touches[0].clientY - (this._lastY || e.touches[0].clientY);
-                
-                this._lastY = e.touches[0].clientY;
-                
-                // 只有當已經滾動到頂部且仍要向下拉，或已經滾動到底部且仍要向上拉時才阻止
-                if ((scrollTop <= 0 && delta > 10) || 
-                    (scrollTop + height >= scrollHeight - 5 && delta < -10)) {
-                    e.preventDefault();
-                }
+        // 為所有滾動容器啟用觸控滑動
+        document.querySelectorAll('.single-tab-content, .tab-pane, .dashboard-container').forEach(element => {
+            // 移除可能已存在的事件監聽器
+            element.removeEventListener('touchmove', handleTouchMove);
+            
+            // 添加新的事件監聽器
+            element.addEventListener('touchmove', handleTouchMove, { passive: true });
+        });
+    }
 
-                // 如果滾動到底部，觸發跳轉到下一頁
+    // 處理觸摸滑動事件
+    function handleTouchMove(e) {
+        // 不阻止默認行為，允許自然滑動
+        // 只在特殊情況下處理底部檢測
+        const container = this;
+        const scrollTop = container.scrollTop;
+        const scrollHeight = container.scrollHeight;
+        const height = container.clientHeight;
+        
+        // 僅在接近底部時檢查是否需要跳轉
+        if (scrollTop + height >= scrollHeight - 10) {
+            // 可能需要跳轉，但不阻止滑動
+            setTimeout(() => {
                 if (scrollTop + height >= scrollHeight - 5) {
-                    e.preventDefault();
                     jumpToNextPage();
                 }
-            }, { passive: false });
-        });
+            }, 100);
+        }
     }
 
     // 跳轉到下一頁的功能
@@ -496,60 +500,60 @@
         /* 解決iPad橫向適配問題 - 直接覆蓋框架樣式 */
         @media (min-width: 768px) {
             .ios-device.ios-landscape .container {
-                max-width: none !important;
-                padding-left: 20px !important;
-                padding-right: 20px !important;
+                max-width: none !重要;
+                padding-left: 20px !重要;
+                padding-right: 20px !重要;
             }
             
             .ios-device.ios-landscape .dashboard-grid {
-                display: grid !important;
-                grid-template-columns: repeat(4, 1fr) !important;
-                grid-gap: 15px !important;
+                display: grid !重要;
+                grid-template-columns: repeat(4, 1fr) !重要;
+                grid-gap: 15px !重要;
             }
             
             .ios-device.ios-landscape .row {
-                margin-left: -10px !important;
-                margin-right: -10px !important;
+                margin-left: -10px !重要;
+                margin-right: -10px !重要;
             }
             
             .ios-device.ios-landscape .chart-container {
-                height: 380px !important;
-                max-height: 380px !important;
+                height: 380px !重要;
+                max-height: 380px !重要;
             }
             
             .ios-device.ios-landscape canvas {
-                max-height: 350px !important;
+                max-height: 350px !重要;
             }
         }
         
         /* 縱向模式強制布局 */
         @media (max-width: 1024px) and (orientation: portrait) {
             .ios-device.ios-portrait .dashboard-grid {
-                display: grid !important;
-                grid-template-columns: repeat(2, 1fr) !important;
-                grid-gap: 10px !important;
+                display: grid !重要;
+                grid-template-columns: repeat(2, 1fr) !重要;
+                grid-gap: 10px !重要;
             }
             
             .ios-device.ios-portrait .chart-container {
-                height: 320px !important;
-                max-height: 320px !important;
+                height: 320px !重要;
+                max-height: 320px !重要;
             }
         }
         
         /* 強制列布局 */
         .forced-landscape-grid {
-            display: grid !important;
+            display: grid !重要;
         }
         
         .forced-landscape-grid > [class*="col-"] {
-            max-width: 100% !important;
-            width: 100% !important;
-            padding: 0 !important;
+            max-width: 100% !重要;
+            width: 100% !重要;
+            padding: 0 !重要;
         }
         
         /* 縮短內容區高度，確保計算按鈕可見 */
         .ios-device .single-tab-content {
-            padding-bottom: 120px !important; /* 確保底部有足夠空間 */
+            padding-bottom: 120px !重要; /* 確保底部有足夠空間 */
         }
         
         /* 其他樣式保持不變 */

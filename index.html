@@ -3,308 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>台灣儲蓄險分析系統 3.0</title>
-    <!-- PWA 相關標籤 - 優化iPad體驗 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="儲蓄險分析">
-    
-    <!-- 應用圖標 - 新設計 -->
-    <link rel="apple-touch-icon" href="icons/icon-152.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png">
-    <link rel="apple-touch-icon" sizes="167x167" href="icons/icon-167.png">
-    
-    <!-- iPad啟動畫面 -->
-    <link rel="apple-touch-startup-image" 
-          media="screen and (device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" 
-          href="icons/splash/ipad-10.9-portrait.png">
-    <link rel="apple-touch-startup-image" 
-          media="screen and (device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" 
-          href="icons/splash/ipad-10.9-landscape.png">
-    <link rel="apple-touch-startup-image" 
-          media="screen and (device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" 
-          href="icons/splash/ipad-9.7-portrait.png">
-    <link rel="apple-touch-startup-image" 
-          media="screen and (device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" 
-          href="icons/splash/ipad-9.7-landscape.png">
-    
     <meta name="theme-color" content="#040b19">
-    <link rel="manifest" href="manifest.json">
-    <!-- 原有樣式表 -->
-    <link rel="stylesheet" href="style.css">
+    <title>台灣儲蓄險分析系統</title>
+    
+    <!-- PWA相關連結 -->
+    <link rel="manifest" href="./manifest.json">
+    <link rel="apple-touch-icon" href="./icons/icon-180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+    
+    <!-- 外部樣式表 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.0/gsap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <!-- 增加iOS觸控修復腳本 -->
-    <script src="ios-touch-fixes.js"></script>
-    <style>
-        /* iPad 專用樣式調整 */
-        @media (min-width: 768px) and (max-width: 1024px) {
-            .dashboard-container {
-                padding: 10px;
-            }
-            
-            .panel {
-                padding: 15px;
-            }
-            
-            .tech-card {
-                margin-bottom: 15px;
-            }
-            
-            /* 適應iPad觸控操作 */
-            .btn, .form-control, .nav-link {
-                min-height: 44px;
-            }
-            
-            select.form-select {
-                height: 44px;
-            }
-            
-            /* 解決iOS上的滾動問題 */
-            .tab-content {
-                -webkit-overflow-scrolling: touch;
-            }
-        }
-        
-        /* iPad 橫向佈局優化 */
-        @media (min-width: 900px) and (max-width: 1024px) and (orientation: landscape) {
-            .dashboard-grid {
-                grid-template-columns: 1fr 1fr 1fr 1fr;
-            }
-            
-            .dashboard-container {
-                max-width: 98%;
-                margin: 0 auto;
-            }
-            
-            .panel[style*="grid-column: span 3"] {
-                grid-column: span 4 !important;
-            }
-            
-            .row {
-                display: flex;
-                flex-wrap: wrap;
-            }
-            
-            /* 橫向模式下的雙欄配置 */
-            .landscape-columns {
-                display: flex;
-                gap: 20px;
-            }
-            
-            .landscape-columns > div {
-                flex: 1;
-            }
-        }
-        
-        /* iPad 縱向佈局優化 */
-        @media (min-width: 768px) and (max-width: 899px) and (orientation: portrait) {
-            .dashboard-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            
-            .panel[style*="grid-column: span 3"] {
-                grid-column: span 2 !important;
-            }
-            
-            /* 直立模式下更緊湊的佈局 */
-            .panel, .tech-card {
-                margin-bottom: 12px;
-            }
-            
-            h1 {
-                font-size: 24px;
-            }
-            
-            .header {
-                padding: 8px 0;
-            }
-        }
-
-        /* 方向變化動畫 */
-        @media screen and (orientation: landscape) {
-            .orientation-change {
-                animation: fadeRotate 0.5s ease-out;
-            }
-        }
-
-        @media screen and (orientation: portrait) {
-            .orientation-change {
-                animation: fadeRotate 0.5s ease-out;
-            }
-        }
-
-        @keyframes fadeRotate {
-            from {
-                opacity: 0.5;
-                transform: scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-        
-        /* 啟動畫面樣式 */
-        .splash-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(145deg, #040b19 0%, #0a2a4a 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-            transition: opacity 0.8s;
-        }
-        
-        .splash-logo {
-            width: 180px;
-            height: 180px;
-            margin-bottom: 25px;
-            border-radius: 40px;
-            background: linear-gradient(45deg, #061c38, #0a2a4a);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 0 40px rgba(0, 229, 255, 0.6);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .splash-logo::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 200%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            animation: shimmer 2s infinite;
-        }
-        
-        .splash-logo i {
-            font-size: 90px;
-            color: #00e5ff;
-            text-shadow: 0 0 25px rgba(0, 229, 255, 0.9);
-            animation: glow 2.5s infinite;
-        }
-        
-        @keyframes glow {
-            0% { filter: drop-shadow(0 0 15px rgba(0, 229, 255, 0.7)); }
-            50% { filter: drop-shadow(0 0 30px rgba(0, 229, 255, 1)); }
-            100% { filter: drop-shadow(0 0 15px rgba(0, 229, 255, 0.7)); }
-        }
-        
-        @keyframes shimmer {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-        
-        .splash-text {
-            color: #e0f7ff;
-            font-size: 24px;
-            margin-top: 20px;
-            font-weight: 600;
-            text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
-        }
-        
-        .splash-loading {
-            width: 200px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
-            margin-top: 30px;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .splash-loading:after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -50%;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, #00e5ff, transparent);
-            animation: loading 1.5s infinite;
-        }
-        
-        @keyframes loading {
-            0% { left: -50%; }
-            100% { left: 100%; }
-        }
-        
-        .splash-version {
-            color: rgba(224, 247, 255, 0.5);
-            font-size: 14px;
-            margin-top: 20px;
-        }
-
-        /* 方向變化反饋提示 */
-        .orientation-feedback {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(0, 229, 255, 0.9);
-            color: #040b19;
-            padding: 15px 25px;
-            border-radius: 12px;
-            font-weight: bold;
-            font-size: 18px;
-            z-index: 10000;
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.7);
-            text-align: center;
-            transition: opacity 0.5s;
-            animation: pulse 1.5s infinite;
-        }
-        
-        .orientation-feedback.fade-out {
-            opacity: 0;
-        }
-        
-        .orientation-feedback i {
-            display: block;
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
-        
-        @keyframes pulse {
-            0% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.05); }
-            100% { transform: translate(-50%, -50%) scale(1); }
-        }
-
-        /* 修復頁籤切換問題 */
-        .tab-content > .tab-pane {
-            display: none;
-        }
-        
-        .tab-content > .active {
-            display: block;
-        }
-        
-        /* 確保內容區域填滿整個視窗 */
-        .tab-content {
-            min-height: calc(100vh - 270px);
-        }
-        
-        /* 頁籤內容獨立顯示，不要疊加在一起 */
-        .tab-pane {
-            position: relative;
-            width: 100%;
-        }
-    </style>
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
     <!-- 啟動畫面 -->
@@ -382,17 +95,17 @@
                 <ul class="nav nav-tabs tech-tabs" id="analysisTab" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="input-tab" data-bs-toggle="tab" data-bs-target="#input" type="button" role="tab" aria-controls="input" aria-selected="true">
-                            <i class="fas fa-keyboard me-2"></i>輸入保單參數
+                            <i class="fas fa-pen-to-square me-2"></i>輸入數據
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="comparison-tab" data-bs-toggle="tab" data-bs-target="#comparison" type="button" role="tab" aria-controls="comparison" aria-selected="false" disabled>
-                            <i class="fas fa-table me-2"></i>對比表
+                            <i class="fas fa-table-columns me-2"></i>比較表
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="report-tab" data-bs-toggle="tab" data-bs-target="#report" type="button" role="tab" aria-controls="report" aria-selected="false" disabled>
-                            <i class="fas fa-file-alt me-2"></i>分析報告
+                            <i class="fas fa-file-contract me-2"></i>綜合報告
                         </button>
                     </li>
                 </ul>
@@ -405,7 +118,7 @@
                 <div class="tech-frame top-left"></div>
                 <div class="tech-frame top-right"></div>
                 <div class="tech-frame bottom-left"></div>
-                <div class="tech-frame bottom-right"></div>
+                <div's="tech-frame bottom-right"></div>
                 <div class="shimmer-effect"></div>
                 
                 <div class="tab-content scroll-container" id="analysisTabContent">
@@ -1439,7 +1152,25 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="./ios-touch-fixes.js"></script>
+    <script src="./script.js"></script>
+    
+    <!-- 註冊Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker 註冊成功:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.error('Service Worker 註冊失敗:', error);
+                    });
+            });
+        }
+    </script>
+    
     <script>
         // 啟動畫面控制
         document.addEventListener('DOMContentLoaded', function() {
