@@ -5,7 +5,7 @@ let showMarketComparison = false;
 
 // 計算與比較函數
 function calculateAndCompare() {
-    console.log("計算分析按鈕被點擊");
+    console.log(" 計算分析按鈕被點擊 ");
     
     // 顯示載入動畫
     showLoading();
@@ -28,7 +28,7 @@ function calculateAndCompare() {
             };
             
             // 驗證自家保單數據 - 添加壽險額度
-            const ownName = document.getElementById('ownName').value || '自家保單';
+            const ownName = document.getElementById('ownName').value || ' 自家保單 ';
             const ownPremium = parseFloat(document.getElementById('ownPremium').value) * 10000; // 萬轉元
             const ownRate = parseFloat(document.getElementById('ownRate').value);
             const ownDividend = parseFloat(document.getElementById('ownDividend').value) * 10000; // 萬轉元
@@ -37,16 +37,16 @@ function calculateAndCompare() {
             const ownLifeInsuranceTerm = parseInt(document.getElementById('ownLifeInsuranceTerm').value || term);
             const ownHasMedical = true; // 自家保單默認包含醫療
             
-            console.log("已獲取保單數據:", {term, currencyType, medicalData, ownName, ownPremium, ownRate, ownDividend, ownSurrender, ownLifeInsurance});
+            console.log(" 已獲取保單數據 :", {term, currencyType, medicalData, ownName, ownPremium, ownRate, ownDividend, ownSurrender, ownLifeInsurance});
             
             if (isNaN(ownPremium) || isNaN(ownRate) || isNaN(ownSurrender)) {
-                alert('請填寫自家保單的完整資料');
+                alert(' 請填寫自家保單的完整資料 ');
                 hideLoading();
                 return;
             }
             
-            // 獲取競品數據 (可選，不強制) - 添加壽險額度
-            const compAName = document.getElementById('compA-name').value || '競品A';
+            // 獲取競品數據 ( 可選，不強制 ) - 添加壽險額度
+            const compAName = document.getElementById('compA-name').value || ' 競品 A';
             const compAPremium = parseFloat(document.getElementById('compA-premium').value) * 10000; // 萬轉元
             const compARate = parseFloat(document.getElementById('compA-rate').value);
             const compADividend = parseFloat(document.getElementById('compA-dividend').value) * 10000; // 萬轉元
@@ -56,7 +56,7 @@ function calculateAndCompare() {
             const compAHasMedical = document.getElementById('compA-medical')?.checked || false;
             const hasCompA = !isNaN(compAPremium) && !isNaN(compARate) && !isNaN(compASurrender);
             
-            const compBName = document.getElementById('compB-name').value || '競品B';
+            const compBName = document.getElementById('compB-name').value || ' 競品 B';
             const compBPremium = parseFloat(document.getElementById('compB-premium').value) * 10000; // 萬轉元
             const compBRate = parseFloat(document.getElementById('compB-rate').value);
             const compBDividend = parseFloat(document.getElementById('compB-dividend').value) * 10000; // 萬轉元
@@ -66,7 +66,7 @@ function calculateAndCompare() {
             const compBHasMedical = document.getElementById('compB-medical')?.checked || false;
             const hasCompB = !isNaN(compBPremium) && !isNaN(compBRate) && !isNaN(compBSurrender);
             
-            const compCName = document.getElementById('compC-name').value || '競品C';
+            const compCName = document.getElementById('compC-name').value || ' 競品 C';
             const compCPremium = parseFloat(document.getElementById('compC-premium').value) * 10000; // 萬轉元
             const compCRate = parseFloat(document.getElementById('compC-rate').value);
             const compCDividend = parseFloat(document.getElementById('compC-dividend').value) * 10000; // 萬轉元
@@ -86,7 +86,7 @@ function calculateAndCompare() {
                 // ...existing code...
             };
             
-            // 建立保單數據結構 (先加入自家保單)
+            // 建立保單數據結構 ( 先加入自家保單 )
             policyData = {
                 own: {
                     name: ownName,
@@ -112,7 +112,7 @@ function calculateAndCompare() {
                 }
             };
             
-            // 如果有競品數據，則加入 (完全可選)
+            // 如果有競品數據，則加入 ( 完全可選 )
             if (hasCompA) {
                 policyData.compA = {
                     name: compAName,
@@ -190,7 +190,7 @@ function calculateAndCompare() {
             if (!hasCompA && !hasCompB && !hasCompC) {
                 // 生成市場平均參考數據
                 policyData.marketAverage = {
-                    name: '市場平均產品',
+                    name: ' 市場平均產品 ',
                     premium: ownPremium * 0.95,
                     rate: ownRate * 0.9,
                     dividend: ownDividend * 0.9, // 年配息略低於自家產品
@@ -213,7 +213,7 @@ function calculateAndCompare() {
                 
                 // 生成市場優質參考數據
                 policyData.marketPremium = {
-                    name: '市場優質產品',
+                    name: ' 市場優質產品 ',
                     premium: ownPremium * 1.05,
                     rate: ownRate * 1.1,
                     dividend: ownDividend * 1.1, // 年配息高於自家產品
@@ -255,7 +255,7 @@ function calculateAndCompare() {
             // 設置比較顯示控制
             setupComparisonControls();
             
-            // 更新UI
+            // 更新 UI
             updateComparisonTables();
             updateDividendAnalysis(); // 新增：配息分析
             updateMedicalAnalysis();
@@ -274,14 +274,14 @@ function calculateAndCompare() {
             // 切換到比較表頁籤 - 使用修正後的頁籤切換函數
             switchTab('comparison');
             
-            // 更新AI訊息
+            // 更新 AI 訊息
             const bestPolicy = findBestPolicy();
-            updateAiMessage(`分析完成！${bestPolicy.name} 綜合評分為 ${bestPolicy.overallScore.toFixed(1)} 分，在報酬與醫療保障方面表現優異。您可點擊分析標籤查看不同維度的比較。`);
+            updateAiMessage(` 分析完成！${bestPolicy.name} 綜合評分為 ${bestPolicy.overallScore.toFixed(1)} 分，在報酬與醫療保障方面表現優異。您可點擊分析標籤查看不同維度的比較。`);
             
-            console.log("分析完成");
+            console.log(" 分析完成 ");
         } catch (error) {
-            console.error("計算過程中出錯:", error);
-            alert("計算過程中出錯: " + error.message);
+            console.error(" 計算過程中出錯 :", error);
+            alert(" 計算過程中出錯 : " + error.message);
             hideLoading();
         }
     }, 2000); // 模擬計算延遲
@@ -292,12 +292,12 @@ function findBestPolicy() {
     // 找出綜合評分最高的保單
     return Object.values(policyData)
         .filter(p => typeof p === 'object' && p.name && p.overallScore !== undefined)
-        .sort((a, b) => b.overallScore - a.overallScore)[0] || { name: '自家保單', overallScore: 0 };
+        .sort((a, b) => b.overallScore - a.overallScore)[0] || { name: ' 自家保單 ', overallScore: 0 };
 }
 
 // 計算保單指標
 function calculatePolicyMetrics() {
-    console.log("正在計算保單指標...");
+    console.log(" 正在計算保單指標 ...");
     
     // 遍歷所有保單並計算指標
     Object.keys(policyData).forEach(key => {
@@ -327,24 +327,24 @@ function calculatePolicyMetrics() {
         }
     });
     
-    console.log("保單指標計算完成");
+    console.log(" 保單指標計算完成 ");
 }
 
 // 計算配息相關指標
 function calculateDividendMetrics() {
-    console.log("計算配息相關指標...");
+    console.log(" 計算配息相關指標 ...");
     
     Object.keys(policyData).forEach(key => {
         if (key !== 'currencyType' && key !== 'advancedOptions' && key !== 'clientData') {
             const policy = policyData[key];
             
-            // 確保dividend有值(保險公司給的配息率)，這裡可能需要與前端欄位匹配
+            // 確保 dividend 有值 ( 保險公司給的配息率 )，這裡可能需要與前端欄位匹配
             policy.dividend = policy.dividend || 0;
             
             // 計算年配息金額
             policy.dividendAmount = policy.dividendAmount || 0;
             
-            // 配息評分 (1-10分)
+            // 配息評分 (1-10 分 )
             policy.dividendScore = Math.min(10, (policy.dividendAmount / policy.premium) * 100) || 0;
             
             // 計算長期配息數據 - 包含利息
@@ -363,11 +363,11 @@ function calculateDividendMetrics() {
             for (let i = 0; i < 5; i++) {
                 const year = policy.longTerm.years[i];
                 
-                // 單純累積(不含利息)
+                // 單純累積 ( 不含利息 )
                 cumulativeDiv = policy.dividendAmount * year;
                 policy.longTerm.cumulativeDividends.push(cumulativeDiv);
                 
-                // 含利息累積(複利計算)
+                // 含利息累積 ( 複利計算 )
                 cumulativeDivWithInterest = 0;
                 for (let j = 0; j < year; j++) {
                     // 之前累積的部分產生利息
@@ -381,19 +381,19 @@ function calculateDividendMetrics() {
         }
     });
     
-    console.log("配息相關指標計算完成");
+    console.log(" 配息相關指標計算完成 ");
 }
 
 // 計算醫療險評分
 function calculateMedicalScores() {
-    console.log("正在計算醫療險評分...");
+    console.log(" 正在計算醫療險評分 ...");
     
     Object.keys(policyData).forEach(key => {
         if (key !== 'currencyType' && key !== 'advancedOptions' && key !== 'clientData') {
             const policy = policyData[key];
             if (!policy.hasMedical) {
                 policy.medicalScore = 0;
-                policy.medicalDescription = '無醫療保障';
+                policy.medicalDescription = ' 無醫療保障 ';
                 return;
             }
             
@@ -408,31 +408,31 @@ function calculateMedicalScores() {
             if (policy.medical.hospitalization) score += 1.5;
             if (policy.medical.surgery) score += 1.5;
             
-            // 根據保障額度加分，最多加2分
+            // 根據保障額度加分，最多加 2 分
             score += Math.min(2, policy.medical.coverage / 100000);
             
-            // 保費比例評估 (較低比例得分較高)，最多加2分
+            // 保費比例評估 ( 較低比例得分較高 )，最多加 2 分
             score += Math.max(0, 2 - policy.medical.premiumRate / 10);
             
-            // 存儲醫療評分，最高10分
+            // 存儲醫療評分，最高 10 分
             policy.medicalScore = Math.min(10, score);
             
             // 生成醫療保障描述
             const features = [];
-            if (policy.medical.criticalIllness) features.push("重大疾病");
-            if (policy.medical.hospitalization) features.push("住院給付");
-            if (policy.medical.surgery) features.push("手術保障");
+            if (policy.medical.criticalIllness) features.push(" 重大疾病 ");
+            if (policy.medical.hospitalization) features.push(" 住院給付 ");
+            if (policy.medical.surgery) features.push(" 手術保障 ");
             
-            policy.medicalDescription = features.length > 0 ? features.join(", ") : "基本醫療";
+            policy.medicalDescription = features.length > 0 ? features.join(", ") : " 基本醫療 ";
         }
     });
     
-    console.log("醫療險評分計算完成");
+    console.log(" 醫療險評分計算完成 ");
 }
 
 // 計算綜合評分
 function calculateOverallScores() {
-    console.log("正在計算綜合評分...");
+    console.log(" 正在計算綜合評分 ...");
     
     // 獲取權重設置
     const returnWeight = 0.35; // 報酬權重
@@ -440,7 +440,7 @@ function calculateOverallScores() {
     const medicalWeight = 0.15; // 醫療權重
     const lifeInsuranceWeight = 0.25; // 壽險權重
     
-    // 找出IRR的最大和最小值以便標準化
+    // 找出 IRR 的最大和最小值以便標準化
     let maxIRR = -Infinity;
     let minIRR = Infinity;
     let maxDividend = -Infinity;
@@ -478,14 +478,14 @@ function calculateOverallScores() {
         if (key !== 'currencyType' && key !== 'advancedOptions' && key !== 'clientData') {
             const policy = policyData[key];
             
-            // 報酬評分 (基於IRR的標準化)
+            // 報酬評分 ( 基於 IRR 的標準化 )
             policy.returnScore = 10 * ((policy.irr - minIRR) / irrRange);
             
-            // 配息評分 (基於配息率標準化)
+            // 配息評分 ( 基於配息率標準化 )
             const dividendRate = policy.dividendAmount / policy.premium;
             policy.dividendScore = 10 * ((dividendRate - minDividend) / dividendRange);
             
-            // 壽險評分 (基於壽險金額與保費比例標準化)
+            // 壽險評分 ( 基於壽險金額與保費比例標準化 )
             const lifeInsuranceRatio = policy.lifeInsurance / policy.premium;
             policy.lifeInsuranceScore = 10 * ((lifeInsuranceRatio - minLifeInsurance) / lifeInsuranceRange);
             
@@ -519,14 +519,14 @@ function calculateOverallScores() {
         policy.rank = index + 1;
     });
     
-    console.log("綜合評分計算完成");
+    console.log(" 綜合評分計算完成 ");
 }
 
 // 更新對比表格
 function updateComparisonTables() {
-    console.log("正在更新對比表格...");
+    console.log(" 正在更新對比表格 ...");
     
-    // 更新IRR比較表
+    // 更新 IRR 比較表
     const irrTable = document.getElementById('irrTable');
     if (irrTable) {
         irrTable.innerHTML = '';
@@ -562,7 +562,7 @@ function updateComparisonTables() {
                 const row = document.createElement('tr');
                 const currencySymbol = policyData.currencyType === 'USD' ? '$' : 'NT$';
                 const diffText = policy.name === policyData.own.name ? 
-                    '基準' : policy.surrenderDiff >= 0 ? 
+                    ' 基準 ' : policy.surrenderDiff >= 0 ? 
                     `+${currencySymbol}${policy.surrenderDiff.toLocaleString()} (${policy.surrenderDiffPercentage.toFixed(2)}%)` : 
                     `${currencySymbol}${policy.surrenderDiff.toLocaleString()} (${policy.surrenderDiffPercentage.toFixed(2)}%)`;
                 
@@ -604,12 +604,12 @@ function updateComparisonTables() {
         }
     }
     
-    console.log("對比表格更新完成");
+    console.log(" 對比表格更新完成 ");
 }
 
 // 更新配息分析
 function updateDividendAnalysis() {
-    console.log("更新配息分析...");
+    console.log(" 更新配息分析 ...");
     
     // 獲取要顯示的保單
     const policies = getFilteredPolicies(
@@ -634,7 +634,7 @@ function updateDividendAnalysis() {
             row.innerHTML = `
                 <td>${policy.name}</td>
                 <td>${dividendRate}%</td>
-                <td>${currencySymbol}${Math.round(dividendAmount).toLocaleString()} 萬</td>
+                <td>${currencySymbol}${Math.round(dividendAmount).toLocaleString()} 萬 </td>
                 <td>${index + 1}</td>
             `;
             dividendTable.appendChild(row);
@@ -654,17 +654,17 @@ function updateDividendAnalysis() {
                 const row = document.createElement('tr');
                 const currencySymbol = policyData.currencyType === 'USD' ? '$' : 'NT$';
                 
-                // 取得20年的累積配息和含利息配息
-                const totalDividend = policy.longTerm.cumulativeDividends[4] / 10000; // 元轉萬 (第5個元素是20年)
+                // 取得 20 年的累積配息和含利息配息
+                const totalDividend = policy.longTerm.cumulativeDividends[4] / 10000; // 元轉萬 ( 第 5 個元素是 20 年 )
                 const totalDividendWithInterest = policy.longTerm.cumulativeDividendsWithInterest[4] / 10000; // 元轉萬
                 const interestEarned = totalDividendWithInterest - totalDividend;
                 const growthRate = ((totalDividendWithInterest / totalDividend - 1) * 100).toFixed(2);
                 
                 row.innerHTML = `
                     <td>${policy.name}</td>
-                    <td>${currencySymbol}${Math.round(totalDividend).toLocaleString()} 萬</td>
-                    <td>${currencySymbol}${Math.round(interestEarned).toLocaleString()} 萬</td>
-                    <td>${currencySymbol}${Math.round(totalDividendWithInterest).toLocaleString()} 萬</td>
+                    <td>${currencySymbol}${Math.round(totalDividend).toLocaleString()} 萬 </td>
+                    <td>${currencySymbol}${Math.round(interestEarned).toLocaleString()} 萬 </td>
+                    <td>${currencySymbol}${Math.round(totalDividendWithInterest).toLocaleString()} 萬 </td>
                     <td>${growthRate}%</td>
                 `;
                 tbody.appendChild(row);
@@ -699,7 +699,7 @@ function renderDividendCharts(policies) {
             data: {
                 labels: policies.map(p => p.name),
                 datasets: [{
-                    label: '年配息金額 (萬)',
+                    label: ' 年配息金額 ( 萬 )',
                     data: policies.map(p => (p.dividendAmount / 10000).toFixed(2)),
                     backgroundColor: policies.map((_, i) => glowColors[i % glowColors.length]),
                     borderColor: policies.map((_, i) => glowColors[i % glowColors.length].replace('0.7', '1')),
@@ -718,7 +718,7 @@ function renderDividendCharts(policies) {
                         callbacks: {
                             label: function(context) {
                                 const currencySymbol = policyData.currencyType === 'USD' ? '$' : 'NT$';
-                                return `配息金額: ${currencySymbol}${context.raw} 萬`;
+                                return ` 配息金額 : ${currencySymbol}${context.raw} 萬 `;
                             }
                         }
                     }
@@ -728,7 +728,7 @@ function renderDividendCharts(policies) {
                         beginAtZero: true,
                         title: {
                             display: true,
-                            text: '年配息金額 (萬)'
+                            text: ' 年配息金額 ( 萬 )'
                         }
                     }
                 },
@@ -740,7 +740,7 @@ function renderDividendCharts(policies) {
         });
     }
     
-    // 配息累積效益圖表 - 顯示1-5-10-15-20年數據
+    // 配息累積效益圖表 - 顯示 1-5-10-15-20 年數據
     const cumulativeCtx = document.getElementById('cumulativeDividendChart');
     if (cumulativeCtx) {
         if (window.cumulativeDividendChartInstance) {
@@ -762,10 +762,10 @@ function renderDividendCharts(policies) {
             'rgba(155, 89, 255, 0.7)'  // 紫
         ];
         
-        // 添加累積配息數據集 (不含利息)
+        // 添加累積配息數據集 ( 不含利息 )
         policiesWithData.forEach((policy, index) => {
             datasets.push({
-                label: `${policy.name} (不含利息)`,
+                label: `${policy.name} ( 不含利息 )`,
                 data: policy.longTerm.cumulativeDividends.map(v => Math.round(v / 10000)),
                 borderColor: glowColors[index % glowColors.length].replace('0.7', '1'),
                 backgroundColor: 'transparent',
@@ -778,7 +778,7 @@ function renderDividendCharts(policies) {
             
             // 添加含利息累積配息數據集
             datasets.push({
-                label: `${policy.name} (含利息)`,
+                label: `${policy.name} ( 含利息 )`,
                 data: policy.longTerm.cumulativeDividendsWithInterest.map(v => Math.round(v / 10000)),
                 borderColor: glowColors[index % glowColors.length].replace('0.7', '1'),
                 backgroundColor: glowColors[index % glowColors.length].replace('0.7', '0.2'),
@@ -792,7 +792,7 @@ function renderDividendCharts(policies) {
         window.cumulativeDividendChartInstance = new Chart(cumulativeCtx, {
             type: 'line',
             data: {
-                labels: [1, 5, 10, 15, 20].map(year => `${year}年`),
+                labels: [1, 5, 10, 15, 20].map(year => `${year} 年 `),
                 datasets: datasets
             },
             options: {
@@ -802,7 +802,7 @@ function renderDividendCharts(policies) {
                         callbacks: {
                             label: function(context) {
                                 const currencySymbol = policyData.currencyType === 'USD' ? '$' : 'NT$';
-                                return `${context.dataset.label}: ${currencySymbol}${context.raw} 萬`;
+                                return `${context.dataset.label}: ${currencySymbol}${context.raw} 萬 `;
                             }
                         }
                     }
@@ -811,13 +811,13 @@ function renderDividendCharts(policies) {
                     y: {
                         title: {
                             display: true,
-                            text: '累積配息金額 (萬)'
+                            text: ' 累積配息金額 ( 萬 )'
                         }
                     },
                     x: {
                         title: {
                             display: true,
-                            text: '保單年度'
+                            text: ' 保單年度 '
                         }
                     }
                 },
@@ -832,7 +832,7 @@ function renderDividendCharts(policies) {
 
 // 更新醫療分析
 function updateMedicalAnalysis() {
-    console.log("正在更新醫療分析...");
+    console.log(" 正在更新醫療分析 ...");
     
     // 更新醫療保障比較表
     const medicalTable = document.getElementById('medicalTable');
@@ -849,7 +849,7 @@ function updateMedicalAnalysis() {
             row.innerHTML = `
                 <td>${policy.name}</td>
                 <td>${policy.hasMedical ? '<i class="fas fa-check-circle text-success"></i>' : '<i class="fas fa-times-circle text-danger"></i>'}</td>
-                <td>${policy.hasMedical ? policy.medicalDescription : '無醫療保障'}</td>
+                <td>${policy.hasMedical ? policy.medicalDescription : ' 無醫療保障 '}</td>
                 <td>${policy.medicalScore.toFixed(1)}</td>
             `;
             medicalTable.appendChild(row);
@@ -898,20 +898,20 @@ function updateMedicalAnalysis() {
             const bestPolicy = policies[0];
             medicalEfficiencyAlert.innerHTML = `
                 <p><strong>${bestPolicy.name}</strong> 提供了最佳的醫療保障，評分為 <strong>${bestPolicy.medicalScore.toFixed(1)}</strong>。</p>
-                <p>主要保障包括: ${bestPolicy.medicalDescription}，醫療保障額度 ${policyData.currencyType === 'USD' ? '$' : 'NT$'}${bestPolicy.medical.coverage.toLocaleString()}。</p>
-                <p>醫療附加保費占總保費的 ${bestPolicy.medical.premiumRate.toFixed(1)}%，每年約 ${policyData.currencyType === 'USD' ? '$' : 'NT$'}${Math.round(bestPolicy.medical.additionalPremium).toLocaleString()}。</p>
+                <p> 主要保障包括 : ${bestPolicy.medicalDescription}，醫療保障額度 ${policyData.currencyType === 'USD' ? '$' : 'NT$'}${bestPolicy.medical.coverage.toLocaleString()}。</p>
+                <p> 醫療附加保費占總保費的 ${bestPolicy.medical.premiumRate.toFixed(1)}%，每年約 ${policyData.currencyType === 'USD' ? '$' : 'NT$'}${Math.round(bestPolicy.medical.additionalPremium).toLocaleString()}。</p>
             `;
         } else {
-            medicalEfficiencyAlert.innerHTML = '<p>沒有保單包含醫療保障功能。</p>';
+            medicalEfficiencyAlert.innerHTML = '<p> 沒有保單包含醫療保障功能。</p>';
         }
     }
     
-    console.log("醫療分析更新完成");
+    console.log(" 醫療分析更新完成 ");
 }
 
 // 更新綜合分析
 function updateComprehensiveAnalysis() {
-    console.log("正在更新綜合分析...");
+    console.log(" 正在更新綜合分析 ...");
     
     // 更新綜合評分表
     const overallTable = document.getElementById('overallTable');
@@ -965,23 +965,23 @@ function updateComprehensiveAnalysis() {
         if (policies.length > 0) {
             const bestPolicy = policies[0];
             comprehensiveAnalysisAlert.innerHTML = `
-                <p>根據綜合評估，<strong>${bestPolicy.name}</strong> 是最佳選擇，綜合評分為 <strong>${bestPolicy.overallScore.toFixed(1)}</strong>。</p>
-                <p>評分比較基準為<strong>自家保單</strong>，比較項目包括：年化報酬率(35%)、年配息(25%)、醫療保障(15%)和壽險保障(25%)。</p>
-                <p>此保單在報酬方面得分 ${bestPolicy.returnScore.toFixed(1)}，配息方面得分 ${bestPolicy.dividendScore.toFixed(1)}，
+                <p> 根據綜合評估，<strong>${bestPolicy.name}</strong> 是最佳選擇，綜合評分為 <strong>${bestPolicy.overallScore.toFixed(1)}</strong>。</p>
+                <p> 評分比較基準為 <strong> 自家保單 </strong>，比較項目包括：年化報酬率 (35%)、年配息 (25%)、醫療保障 (15%) 和壽險保障 (25%)。</p>
+                <p> 此保單在報酬方面得分 ${bestPolicy.returnScore.toFixed(1)}，配息方面得分 ${bestPolicy.dividendScore.toFixed(1)}，
                 醫療保障得分 ${bestPolicy.medicalScore.toFixed(1)}，壽險保障得分 ${bestPolicy.lifeInsuranceScore.toFixed(1)}。</p>
-                <p>其年化報酬率 ${(bestPolicy.irr * 100).toFixed(2)}% 在所有產品中${policies[0] === bestPolicy ? '居首位' : '表現優異'}，
+                <p> 其年化報酬率 ${(bestPolicy.irr * 100).toFixed(2)}% 在所有產品中 ${policies[0] === bestPolicy ? ' 居首位 ' : ' 表現優異 '}，
                 期末解約金為 ${policyData.currencyType === 'USD' ? '$' : 'NT$'}${(bestPolicy.surrender / 10000).toLocaleString()} 萬。</p>
-                <p>建議根據客戶風險偏好及保障需求，選擇最適合的保單組合。</p>
+                <p> 建議根據客戶風險偏好及保障需求，選擇最適合的保單組合。</p>
             `;
         }
     }
     
-    console.log("綜合分析更新完成");
+    console.log(" 綜合分析更新完成 ");
 }
 
 // 更新獎章標記
 function updateBadges() {
-    console.log("正在更新獎章標記...");
+    console.log(" 正在更新獎章標記 ...");
     
     // 獲取排序後的保單列表
     const irrPolicies = Object.keys(policyData)
@@ -1010,10 +1010,10 @@ function updateBadges() {
         .map(key => policyData[key])
         .sort((a, b) => b.overallScore - a.overallScore);
     
-    // 更新最佳IRR標籤
+    // 更新最佳 IRR 標籤
     const bestIRRBadge = document.getElementById('bestIRRBadge');
     if (bestIRRBadge && irrPolicies.length > 0) {
-        bestIRRBadge.innerHTML = `<i class="fas fa-trophy me-1"></i>${irrPolicies[0].name} - 最佳IRR ${(irrPolicies[0].irr * 100).toFixed(2)}%`;
+        bestIRRBadge.innerHTML = `<i class="fas fa-trophy me-1"></i>${irrPolicies[0].name} - 最佳 IRR ${(irrPolicies[0].irr * 100).toFixed(2)}%`;
     }
     
     // 更新最高報酬標籤
@@ -1025,32 +1025,32 @@ function updateBadges() {
     // 更新最佳醫療標籤
     const bestMedicalBadge = document.getElementById('bestMedicalBadge');
     if (bestMedicalBadge && medicalPolicies.length > 0) {
-        bestMedicalBadge.innerHTML = `<i class="fas fa-star me-1"></i>${medicalPolicies[0].name} - 最佳醫療保障`;
+        bestMedicalBadge.innerHTML = `<i class="fas fa-star me-1"></i>${medicalPolicies[0].name} - 最佳醫療保障 `;
     }
     
     // 更新最穩定標籤
     const leastSensitiveBadge = document.getElementById('leastSensitiveBadge');
     if (leastSensitiveBadge && stabilityPolicies.length > 0) {
-        leastSensitiveBadge.innerHTML = `<i class="fas fa-shield-alt me-1"></i>${stabilityPolicies[0].name} - 最穩定產品`;
+        leastSensitiveBadge.innerHTML = `<i class="fas fa-shield-alt me-1"></i>${stabilityPolicies[0].name} - 最穩定產品 `;
     }
     
     // 更新綜合最佳標籤
     const bestOverallBadge = document.getElementById('bestOverallBadge');
     if (bestOverallBadge && overallPolicies.length > 0) {
-        bestOverallBadge.innerHTML = `<i class="fas fa-crown me-1"></i>${overallPolicies[0].name} - 綜合最佳產品`;
+        bestOverallBadge.innerHTML = `<i class="fas fa-crown me-1"></i>${overallPolicies[0].name} - 綜合最佳產品 `;
     }
     
-    console.log("獎章標記更新完成");
+    console.log(" 獎章標記更新完成 ");
 }
 
 // 生成圖表
 function renderCharts() {
-    console.log("正在生成圖表...");
+    console.log(" 正在生成圖表 ...");
     
     try {
-        // 檢查Chart是否可用
+        // 檢查 Chart 是否可用
         if (typeof Chart === 'undefined') {
-            console.error("Chart.js未載入");
+            console.error("Chart.js 未載入 ");
             return;
         }
         
@@ -1061,11 +1061,11 @@ function renderCharts() {
             
         // 如果沒有保單數據，直接返回
         if (policies.length === 0) {
-            console.log("沒有保單數據，不生成圖表");
+            console.log(" 沒有保單數據，不生成圖表 ");
             return;
         }
         
-        // 檢測是否為iPad橫向模式
+        // 檢測是否為 iPad 橫向模式
         const isIPadLandscape = isIPadLandscapeMode();
         
         // 更新圖表容器佈局
@@ -1080,7 +1080,7 @@ function renderCharts() {
             { bg: 'rgba(155, 89, 255, 0.7)', border: 'rgba(155, 89, 255, 1)' }  // 紫色
         ];
         
-        // IRR條形圖
+        // IRR 條形圖
         const irrCtx = document.getElementById('irrChart');
         if (irrCtx) {
             // 如果已經有圖表實例，先銷毀它
@@ -1093,7 +1093,7 @@ function renderCharts() {
                 data: {
                     labels: policies.map(p => p.name),
                     datasets: [{
-                        label: '年化報酬率 (%)',
+                        label: ' 年化報酬率 (%)',
                         data: policies.map(p => (p.irr * 100).toFixed(2)),
                         backgroundColor: policies.map((_, i) => glowColors[i % glowColors.length].bg),
                         borderColor: policies.map((_, i) => glowColors[i % glowColors.length].border),
@@ -1120,7 +1120,7 @@ function renderCharts() {
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: '年化報酬率 (%)',
+                                text: ' 年化報酬率 (%)',
                                 color: 'rgba(255, 255, 255, 0.8)'
                             },
                             grid: {
@@ -1175,15 +1175,15 @@ function renderCharts() {
             window.radarChartInstance = new Chart(radarCtx, {
                 type: 'radar',
                 data: {
-                    labels: ['報酬率', '年化報酬率', '醫療保障', '穩定性', '成本效益'],
+                    labels: [' 報酬率 ', ' 年化報酬率 ', ' 醫療保障 ', ' 穩定性 ', ' 成本效益 '],
                     datasets: policies.map((policy, i) => {
                         return {
                             label: policy.name,
                             data: [
-                                policy.returnRate / 2, // 報酬率 (標準化)
-                                policy.irr * 1000, // 年化報酬率 (標準化)
+                                policy.returnRate / 2, // 報酬率 ( 標準化 )
+                                policy.irr * 1000, // 年化報酬率 ( 標準化 )
                                 policy.medicalScore,
-                                10 - (policy.sensitivity?.range || 0) * 100, // 穩定性 (反向)
+                                10 - (policy.sensitivity?.range || 0) * 100, // 穩定性 ( 反向 )
                                 policy.surrender / policy.totalPremium * 5 // 成本效益
                             ],
                             backgroundColor: `rgba(${30 + i * 50}, ${100 + i * 40}, 255, 0.2)`,
@@ -1216,12 +1216,12 @@ function renderCharts() {
                     labels: policies.map(p => p.name),
                     datasets: [
                         {
-                            label: '報酬評分',
+                            label: ' 報酬評分 ',
                             data: policies.map(p => p.returnScore),
                             backgroundColor: 'rgba(0, 229, 255, 0.7)'
                         },
                         {
-                            label: '醫療評分',
+                            label: ' 醫療評分 ',
                             data: policies.map(p => p.medicalScore),
                             backgroundColor: 'rgba(0, 255, 157, 0.7)'
                         }
@@ -1244,13 +1244,13 @@ function renderCharts() {
             resizeAllCharts();
         }, 100);
         
-        console.log("圖表生成完成");
+        console.log(" 圖表生成完成 ");
     } catch (error) {
-        console.error("生成圖表時出錯:", error);
+        console.error(" 生成圖表時出錯 :", error);
     }
 }
 
-// 檢測是否為iPad橫向模式
+// 檢測是否為 iPad 橫向模式
 function isIPadLandscapeMode() {
     const isIPad = /iPad/.test(navigator.userAgent) || 
                    (/Macintosh/i.test(navigator.platform) && navigator.maxTouchPoints > 1);
@@ -1258,7 +1258,7 @@ function isIPadLandscapeMode() {
     return isIPad && window.innerWidth > window.innerHeight;
 }
 
-// 調整圖表容器佈局，適應橫向/縱向模式
+// 調整圖表容器佈局，適應橫向 / 縱向模式
 function adjustChartContainers(isLandscape) {
     // 對比表面板佈局調整
     const comparisonRows = document.querySelectorAll('#comparison .row');
@@ -1322,7 +1322,7 @@ function handleOrientationChange() {
         adjustChartContainers(isLandscape);
         resizeAllCharts();
         
-        console.log("方向變更處理完成");
+        console.log(" 方向變更處理完成 ");
     }, 500);
 }
 
@@ -1331,7 +1331,7 @@ function showOrientationFeedback(isLandscape) {
     const feedback = document.createElement('div');
     feedback.className = 'orientation-feedback';
     feedback.innerHTML = `<i class="fas fa-${isLandscape ? 'expand' : 'compress'}-alt"></i> 
-                        ${isLandscape ? '橫向模式' : '縱向模式'}`;
+                        ${isLandscape ? ' 橫向模式 ' : ' 縱向模式 '}`;
     
     document.body.appendChild(feedback);
     
@@ -1357,7 +1357,7 @@ function fixTabSwitching() {
 
 // 生成報告
 function generateReport() {
-    console.log("生成報告...");
+    console.log(" 生成報告 ...");
     
     try {
         // 當前日期
@@ -1365,7 +1365,7 @@ function generateReport() {
         
         // 貨幣類型
         document.getElementById('reportCurrency').textContent = 
-            policyData.currencyType === 'USD' ? '美金 (USD)' : '台幣 (TWD)';
+            policyData.currencyType === 'USD' ? ' 美金 (USD)' : ' 台幣 (TWD)';
         
         // 最佳保單信息
         const bestPolicy = findBestPolicy();
@@ -1376,14 +1376,14 @@ function generateReport() {
         
         // 更新推薦內容
         const recommendationText = `
-            根據您的需求分析，${bestPolicy.name}在綜合評分中表現最佳，總評分為${bestPolicy.overallScore.toFixed(1)}分。
-            此保單提供${bestPolicy.dividend.toFixed(2)}%的年配息率，年化報酬率(IRR)為${(bestPolicy.irr * 100).toFixed(2)}%，
-            醫療保障得分為${bestPolicy.medicalScore.toFixed(1)}分。
-            其中配息收益佔總報酬的${bestPolicy.dividendRatio.toFixed(1)}%，提供穩定的現金流。
+            根據您的需求分析，${bestPolicy.name} 在綜合評分中表現最佳，總評分為 ${bestPolicy.overallScore.toFixed(1)} 分。
+            此保單提供 ${bestPolicy.dividend.toFixed(2)}% 的年配息率，年化報酬率 (IRR) 為 ${(bestPolicy.irr * 100).toFixed(2)}%，
+            醫療保障得分為 ${bestPolicy.medicalScore.toFixed(1)} 分。
+            其中配息收益佔總報酬的 ${bestPolicy.dividendRatio.toFixed(1)}%，提供穩定的現金流。
             建議您考慮選擇此產品，以獲得良好的保障和投資回報。
         `;
         document.getElementById('reportRecommendation').innerHTML = `
-            <h5 class="tech-bright-text">專業建議:</h5>
+            <h5 class="tech-bright-text"> 專業建議 :</h5>
             <p>${recommendationText}</p>
         `;
         
@@ -1401,7 +1401,7 @@ function generateReport() {
         // 切換到報告頁籤
         switchTab('report');
     } catch (error) {
-        console.error("生成報告時出錯:", error);
+        console.error(" 生成報告時出錯 :", error);
     }
 }
 
@@ -1420,15 +1420,15 @@ function renderReportChart() {
     window.reportChartInstance = new Chart(ctx, {
         type: 'radar',
         data: {
-            labels: ['年化報酬率', '配息收益', '醫療保障', '穩定性', '綜合表現'],
+            labels: [' 年化報酬率 ', ' 配息收益 ', ' 醫療保障 ', ' 穩定性 ', ' 綜合表現 '],
             datasets: policies.map((policy, i) => {
                 return {
                     label: policy.name,
                     data: [
-                        policy.irr * 500,         // 年化報酬率(標準化)
-                        policy.dividend,          // 配息(已經是百分比)
+                        policy.irr * 500,         // 年化報酬率 ( 標準化 )
+                        policy.dividend,          // 配息 ( 已經是百分比 )
                         policy.medicalScore,      // 醫療保障
-                        10 - (policy.sensitivity?.range || 0) * 100, // 穩定性(反向)
+                        10 - (policy.sensitivity?.range || 0) * 100, // 穩定性 ( 反向 )
                         policy.overallScore       // 綜合表現
                     ],
                     backgroundColor: policy.name === policyData.own.name ? 
@@ -1520,7 +1520,7 @@ function setupComparisonControls() {
 
 // 更新顯示的保單
 function updateDisplayedPolicies(showOnlyOwn, includeMarket) {
-    console.log("更新顯示的保單:", {showOnlyOwn, includeMarket});
+    console.log(" 更新顯示的保單 :", {showOnlyOwn, includeMarket});
     
     // 根據選擇獲取要顯示的保單
     const policiesToShow = getFilteredPolicies(showOnlyOwn, includeMarket);
@@ -1570,7 +1570,7 @@ function handleModuleChange(module) {
     if (module === 'basic') {
         // 顯示基本分析模組的內容
         document.getElementById('input').classList.add('show', 'active');
-        updateAiMessage("基本分析模式下，您可以輸入自家保單數據進行分析比較，競品數據為選填項目。系統會自動產生市場參考數據進行比較。");
+        updateAiMessage(" 基本分析模式下，您可以輸入自家保單數據進行分析比較，競品數據為選填項目。系統會自動產生市場參考數據進行比較。");
     } else {
         // 為其他模組顯示更優化的「即將推出」提示
         showEnhancedComingSoonModal(module);
@@ -1580,19 +1580,19 @@ function handleModuleChange(module) {
 // 新增：優化的功能即將推出模態視窗
 function showEnhancedComingSoonModal(module) {
     const moduleNames = {
-        'retirement': '退休規劃',
-        'portfolio': '資產配置',
-        'market': '市場數據'
+        'retirement': ' 退休規劃 ',
+        'portfolio': ' 資產配置 ',
+        'market': ' 市場數據 '
     };
     
     const moduleName = moduleNames[module] || module;
     const moduleDescriptions = {
-        'retirement': '退休金缺口分析、儲蓄險年金化選項評估、退休收入試算',
-        'portfolio': '資產配置建議、多保單組合分析、風險與報酬平衡評估',
-        'market': '市場利率趨勢分析、同業產品比較、保險公司財務指標評估'
+        'retirement': ' 退休金缺口分析、儲蓄險年金化選項評估、退休收入試算 ',
+        'portfolio': ' 資產配置建議、多保單組合分析、風險與報酬平衡評估 ',
+        'market': ' 市場利率趨勢分析、同業產品比較、保險公司財務指標評估 '
     };
     
-    const moduleDesc = moduleDescriptions[module] || '進階功能評估與比較';
+    const moduleDesc = moduleDescriptions[module] || ' 進階功能評估與比較 ';
     
     // 創建一個更吸引人的模態彈窗
     const modalHTML = `
@@ -1611,10 +1611,10 @@ function showEnhancedComingSoonModal(module) {
                             <i class="fas fa-cogs" style="font-size: 80px; color: #00ffff; text-shadow: 0 0 30px rgba(0, 255, 255, 0.8);"></i>
                         </div>
                         <div class="col-md-8">
-                            <h5 class="tech-bright-text">即將推出的功能</h5>
+                            <h5 class="tech-bright-text"> 即將推出的功能 </h5>
                             <p class="tech-bright-text">${moduleDesc}</p>
                             <div class="alert" style="background-color: rgba(0, 229, 255, 0.2); border: 1px solid rgba(0, 229, 255, 0.5);">
-                                <i class="fas fa-lightbulb me-2"></i>我們正在開發更完整的${moduleName}功能，預計將於下一版本推出！
+                                <i class="fas fa-lightbulb me-2"></i> 我們正在開發更完整的 ${moduleName} 功能，預計將於下一版本推出！
                             </div>
                         </div>
                     </div>
@@ -1622,23 +1622,23 @@ function showEnhancedComingSoonModal(module) {
                     <div class="progress mt-4 mb-3" style="height: 20px; background-color: rgba(255, 255, 255, 0.1);">
                         <div class="progress-bar progress-bar-striped progress-bar-animated"
                              role="progressbar" style="width: 75%; background: linear-gradient(90deg, rgba(0, 229, 255, 0.8), rgba(0, 255, 157, 0.8));"
-                             aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">開發進度：75%</div>
+                             aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"> 開發進度： 75%</div>
                     </div>
                     
                     <div class="row mt-4">
                         <div class="col-md-6">
                             <div class="card h-100" style="background-color: rgba(0, 30, 60, 0.5); border: 1px solid rgba(0, 229, 255, 0.3);">
                                 <div class="card-body">
-                                    <h6 class="tech-bright-text"><i class="fas fa-calendar-check me-2"></i>預計上線時間</h6>
-                                    <p class="tech-bright-text">2023年第4季</p>
+                                    <h6 class="tech-bright-text"><i class="fas fa-calendar-check me-2"></i> 預計上線時間 </h6>
+                                    <p class="tech-bright-text">2023 年第 4 季 </p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="card h-100" style="background-color: rgba(0, 30, 60, 0.5); border: 1px solid rgba(0, 229, 255, 0.3);">
                                 <div class="card-body">
-                                    <h6 class="tech-bright-text"><i class="fas fa-bell me-2"></i>功能通知</h6>
-                                    <p class="tech-bright-text">完成後我們將通知您！</p>
+                                    <h6 class="tech-bright-text"><i class="fas fa-bell me-2"></i> 功能通知 </h6>
+                                    <p class="tech-bright-text"> 完成後我們將通知您！</p>
                                 </div>
                             </div>
                         </div>
@@ -1646,7 +1646,7 @@ function showEnhancedComingSoonModal(module) {
                 </div>
                 <div class="modal-footer" style="border-top: 2px solid rgba(0, 229, 255, 0.5);">
                     <button type="button" class="btn" style="background: linear-gradient(90deg, rgba(0, 229, 255, 0.5), rgba(0, 255, 157, 0.5)); border: none;" data-bs-dismiss="modal" id="backToBasicBtn">
-                        <i class="fas fa-calculator me-2"></i>返回基本分析
+                        <i class="fas fa-calculator me-2"></i> 返回基本分析
                     </button>
                 </div>
             </div>
@@ -1679,8 +1679,8 @@ function showEnhancedComingSoonModal(module) {
         document.querySelector('.btn-nav[data-module="basic"]').click();
     });
     
-    // 更新AI訊息
-    updateAiMessage(`${moduleName}功能即將在下一版本推出！目前您可以使用基本分析功能進行保單評估。`);
+    // 更新 AI 訊息
+    updateAiMessage(`${moduleName} 功能即將在下一版本推出！目前您可以使用基本分析功能進行保單評估。`);
 }
 
 // 初始化動態背景效果
@@ -1744,7 +1744,7 @@ function createRandomDataPoints() {
     oldPoints.forEach(point => point.remove());
     
     // 創建新的數據點
-    const pointCount = 8 + Math.floor(Math.random() * 7); // 8-15個點
+    const pointCount = 8 + Math.floor(Math.random() * 7); // 8-15 個點
     
     for (let i = 0; i < pointCount; i++) {
         const point = document.createElement('div');
@@ -1780,21 +1780,21 @@ function refreshScanLine() {
 
 // 添加計算按鈕的事件監聽器和其他初始化代碼
 
-// 在DOMContentLoaded事件中添加按鈕的事件監聽器
+// 在 DOMContentLoaded 事件中添加按鈕的事件監聽器
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("DOM載入完成，初始化事件監聽器...");
+    console.log("DOM 載入完成，初始化事件監聽器 ...");
     
     try {
         // 為計算分析按鈕添加點擊事件
         const calculateBtn = document.getElementById('calculateBtn');
         if (calculateBtn) {
-            console.log("找到計算按鈕，添加事件監聽器");
+            console.log(" 找到計算按鈕，添加事件監聽器 ");
             calculateBtn.addEventListener('click', function() {
-                console.log("計算按鈕被點擊");
+                console.log(" 計算按鈕被點擊 ");
                 calculateAndCompare();
             });
         } else {
-            console.error("未找到計算按鈕元素 'calculateBtn'");
+            console.error(" 未找到計算按鈕元素 'calculateBtn'");
         }
         
         // 初始化模組切換按鈕
@@ -1871,16 +1871,16 @@ document.addEventListener('DOMContentLoaded', function() {
         // 初始化動態背景效果
         initDynamicEffects();
         
-        console.log("所有事件監聽器初始化完成");
+        console.log(" 所有事件監聽器初始化完成 ");
     } catch (error) {
-        console.error("初始化事件監聽器時出錯:", error);
-        alert("初始化過程中出錯: " + error.message);
+        console.error(" 初始化事件監聽器時出錯 :", error);
+        alert(" 初始化過程中出錯 : " + error.message);
     }
 });
 
 // 頁籤切換函數 - 修正滾輪問題版本
 function switchTab(tabId) {
-    console.log(`切換到頁籤: ${tabId}`);
+    console.log(` 切換到頁籤 : ${tabId}`);
     
     // 移除所有頁籤的活動狀態
     document.querySelectorAll('#analysisTab .nav-link').forEach(tab => {
@@ -1916,14 +1916,14 @@ function updateProgressBar(tabId) {
     const progressBar = document.getElementById('progressBar');
     if (progressBar) {
         let progress = 33;
-        let step = "步驟 1/3";
+        let step = " 步驟 1/3";
         
         if (tabId === 'comparison') {
             progress = 66;
-            step = "步驟 2/3";
+            step = " 步驟 2/3";
         } else if (tabId === 'report') {
             progress = 100;
-            step = "步驟 3/3";
+            step = " 步驟 3/3";
         }
         
         // 添加動畫效果
@@ -1970,7 +1970,7 @@ function showLoading() {
     
     const spinnerText = document.createElement('span');
     spinnerText.className = 'sr-only';
-    spinnerText.textContent = '計算中...';
+    spinnerText.textContent = ' 計算中 ...';
     spinner.appendChild(spinnerText);
     
     loadingOverlay.appendChild(spinner);
@@ -1985,7 +1985,7 @@ function hideLoading() {
     }
 }
 
-// 更新AI訊息
+// 更新 AI 訊息
 function updateAiMessage(message) {
     const aiSuggestion = document.getElementById('aiSuggestion');
     if (aiSuggestion) {
@@ -2006,7 +2006,7 @@ function updateAiMessage(message) {
 
 // 添加事件監聽器
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("DOM載入完成，初始化事件監聽器...");
+    console.log("DOM 載入完成，初始化事件監聽器 ...");
     
     try {
         // 初始化市場比較控制
@@ -2033,9 +2033,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // 為計算分析按鈕添加點擊事件
         const calculateBtn = document.getElementById('calculateBtn');
         if (calculateBtn) {
-            console.log("找到計算按鈕，添加事件監聽器");
+            console.log(" 找到計算按鈕，添加事件監聽器 ");
             calculateBtn.addEventListener('click', function() {
-                console.log("計算按鈕被點擊");
+                console.log(" 計算按鈕被點擊 ");
                 calculateAndCompare();
             });
         }
@@ -2066,23 +2066,23 @@ document.addEventListener('DOMContentLoaded', function() {
         // ...existing code...
         
     } catch (error) {
-        console.error("初始化事件監聽器時出錯:", error);
+        console.error(" 初始化事件監聽器時出錯 :", error);
     }
 });
 
 // 設備方向和響應式處理
 function initOrientationHandling() {
-    console.log("初始化設備方向處理...");
+    console.log(" 初始化設備方向處理 ...");
     
     // 監聽方向變化事件
     window.addEventListener('orientationchange', function() {
-        console.log('方向已變更');
+        console.log(' 方向已變更 ');
         handleOrientationChange();
     });
     
     // 也監聽 resize 事件，因為某些設備不觸發 orientationchange
     window.addEventListener('resize', debounce(function() {
-        console.log('視窗大小已變更');
+        console.log(' 視窗大小已變更 ');
         if (isOrientationChange()) {
             handleOrientationChange();
         }
@@ -2111,7 +2111,7 @@ function checkOrientation() {
     document.body.classList.toggle('landscape', isLandscape);
     document.body.classList.toggle('portrait', !isLandscape);
     
-    console.log(`目前方向: ${isLandscape ? '橫向' : '縱向'}`);
+    console.log(` 目前方向 : ${isLandscape ? ' 橫向 ' : ' 縱向 '}`);
     updateLayoutForOrientation(isLandscape);
     
     return isLandscape;
@@ -2150,7 +2150,7 @@ function handleOrientationChange() {
         // 更新布局
         updateLayoutForOrientation(isLandscape);
         
-        console.log("方向變更處理完成");
+        console.log(" 方向變更處理完成 ");
     }, 300);
 }
 
@@ -2188,7 +2188,7 @@ function updateLayoutForOrientation(isLandscape) {
 
 // 重新渲染所有圖表
 function redrawAllCharts() {
-    console.log("重新渲染所有圖表");
+    console.log(" 重新渲染所有圖表 ");
     
     // 檢查並重繪每個圖表
     const chartInstances = [
@@ -2202,25 +2202,25 @@ function redrawAllCharts() {
     
     chartInstances.forEach(instanceName => {
         if (window[instanceName]) {
-            console.log(`重新渲染: ${instanceName}`);
+            console.log(` 重新渲染 : ${instanceName}`);
             try {
                 window[instanceName].resize();
                 window[instanceName].update();
             } catch (error) {
-                console.error(`重繪${instanceName}時出錯:`, error);
+                console.error(` 重繪 ${instanceName} 時出錯 :`, error);
             }
         }
     });
 }
 
-// iPad專用佈局優化
+// iPad 專用佈局優化
 function optimizeForIPad() {
-    // 檢測是否為iPad
+    // 檢測是否為 iPad
     const isIPad = /iPad/.test(navigator.userAgent) || 
                   (/Macintosh/i.test(navigator.platform) && navigator.maxTouchPoints > 1);
     
     if (isIPad) {
-        console.log("檢測到iPad設備，應用專用優化");
+        console.log(" 檢測到 iPad 設備，應用專用優化 ");
         document.body.classList.add('ipad-device');
         
         // 增強觸控體驗
@@ -2248,7 +2248,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 初始化方向處理
     initOrientationHandling();
     
-    // 優化iPad體驗
+    // 優化 iPad 體驗
     optimizeForIPad();
     
     // ...existing code...
@@ -2267,7 +2267,7 @@ renderCharts = function() {
     // 為圖表適應方向
     const chartElements = document.querySelectorAll('.chart-container canvas');
     chartElements.forEach(canvas => {
-        // 將canvas標記為需要適應方向
+        // 將 canvas 標記為需要適應方向
         canvas.setAttribute('data-orientation-aware', 'true');
     });
 }
@@ -2290,7 +2290,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // 阻止點擊事件可能導致的頁面滾動
             e.preventDefault();
             
-            // 其他原有處理邏輯...
+            // 其他原有處理邏輯 ...
             
             // 防止事件冒泡
             e.stopPropagation();
@@ -2300,14 +2300,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // ...existing code...
 });
 
-// 修正iOS上的滾動問題
+// 修正 iOS 上的滾動問題
 function fixIOSScrolling() {
     const isIOS = /iPad|iPhone|iPod/.test(navigator.platform) || 
                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     
     if (isIOS) {
         document.querySelectorAll('.single-tab-content').forEach(tab => {
-            // 修復iOS橡皮筋效果
+            // 修復 iOS 橡皮筋效果
             tab.addEventListener('touchmove', function(e) {
                 const scrollTop = tab.scrollTop;
                 const scrollHeight = tab.scrollHeight;
@@ -2329,14 +2329,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // ...existing code...
 });
 
-// 完全重寫頁籤切換函數，解決iPad問題
+// 完全重寫頁籤切換函數，解決 iPad 問題
 function switchTab(tabId) {
-    console.log(`切換到頁籤: ${tabId}`);
+    console.log(` 切換到頁籤 : ${tabId}`);
     
     // 獲取頁籤元素
     const targetTab = document.getElementById(`${tabId}-tab`);
     if (!targetTab || targetTab.hasAttribute('disabled')) {
-        console.log('頁籤被禁用或不存在，無法切換');
+        console.log(' 頁籤被禁用或不存在，無法切換 ');
         return;
     }
     
@@ -2375,7 +2375,7 @@ function switchTab(tabId) {
     // 更新進度條
     updateProgressBar(tabId);
     
-    // 在iPad上修復可能的滾動問題
+    // 在 iPad 上修復可能的滾動問題
     if (/iPad|iPhone|iPod/.test(navigator.platform) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
         // 防止整頁滾動
         document.body.scrollTop = 0;
@@ -2388,14 +2388,14 @@ function updateProgressBar(tabId) {
     const progressBar = document.getElementById('progressBar');
     if (progressBar) {
         let progress = 33;
-        let step = "步驟 1/3";
+        let step = " 步驟 1/3";
         
         if (tabId === 'comparison') {
             progress = 66;
-            step = "步驟 2/3";
+            step = " 步驟 2/3";
         } else if (tabId === 'report') {
             progress = 100;
-            step = "步驟 3/3";
+            step = " 步驟 3/3";
         }
         
         // 強化過渡效果
@@ -2421,13 +2421,13 @@ function updateProgressBar(tabId) {
     }
 }
 
-// 初始化iPad專用優化
+// 初始化 iPad 專用優化
 function initIPadOptimizations() {
     const isIPad = /iPad/.test(navigator.userAgent) || 
                    (/Macintosh/i.test(navigator.platform) && navigator.maxTouchPoints > 1);
     
     if (isIPad) {
-        console.log('檢測到iPad，應用專用優化');
+        console.log(' 檢測到 iPad，應用專用優化 ');
         document.body.classList.add('ipad-device');
         
         // 強制頁面保持固定尺寸，防止橡皮筋效果
@@ -2458,7 +2458,7 @@ function initIPadOptimizations() {
         
         // 改善頁籤滾動體驗
         document.querySelectorAll('.single-tab-content').forEach(content => {
-            // 防止iOS橡皮筋效果
+            // 防止 iOS 橡皮筋效果
             content.addEventListener('touchmove', function(e) {
                 // 允許正常滾動，但阻止到達邊界時的過度滾動
                 const scrollTop = this.scrollTop;
@@ -2483,11 +2483,11 @@ function preventDefault(e) {
     e.preventDefault();
 }
 
-// 在DOM載入後初始化
+// 在 DOM 載入後初始化
 document.addEventListener('DOMContentLoaded', function() {
     // ...existing code...
     
-    // 添加iPad優化初始化
+    // 添加 iPad 優化初始化
     initIPadOptimizations();
     
     // 確保頁籤的點擊區域足夠大
@@ -2513,7 +2513,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ...existing code...
 });
 
-// 專門處理iOS旋轉問題的函數
+// 專門處理 iOS 旋轉問題的函數
 function handleIOSOrientationChange() {
     // 添加遮罩以隱藏旋轉期間的視覺抖動
     const mask = document.createElement('div');
@@ -2547,7 +2547,7 @@ function handleIOSOrientationChange() {
     }, 300);
 }
 
-// 檢測是否為iPad
+// 檢測是否為 iPad
 function isIPad() {
     return /iPad/.test(navigator.userAgent) || 
            (/Macintosh/i.test(navigator.platform) && navigator.maxTouchPoints > 1);
@@ -2555,7 +2555,7 @@ function isIPad() {
 
 // 更新設備方向處理
 window.addEventListener('orientationchange', function() {
-    console.log('方向已變更:', window.orientation);
+    console.log(' 方向已變更 :', window.orientation);
     
     if (isIPad()) {
         handleIOSOrientationChange();

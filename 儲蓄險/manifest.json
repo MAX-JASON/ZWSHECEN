@@ -1,7 +1,7 @@
 {
-  "name": "台灣儲蓄險分析系統",
-  "short_name": "儲蓄險分析",
-  "description": "專業儲蓄險分析與比較系統",
+  "name": " 台灣儲蓄險分析系統 ",
+  "short_name": " 儲蓄險分析 ",
+  "description": " 專業儲蓄險分析與比較系統 ",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#040b19",
@@ -71,16 +71,16 @@
   ],
   "shortcuts": [
     {
-      "name": "開始分析",
-      "short_name": "分析",
-      "description": "執行儲蓄險分析",
+      "name": " 開始分析 ",
+      "short_name": " 分析 ",
+      "description": " 執行儲蓄險分析 ",
       "url": "./index.html?action=analyze",
       "icons": [{ "src": "./icons/icon-144.png", "sizes": "144x144" }]
     },
     {
-      "name": "保單比較",
-      "short_name": "比較",
-      "description": "比較多個保單",
+      "name": " 保單比較 ",
+      "short_name": " 比較 ",
+      "description": " 比較多個保單 ",
       "url": "./index.html?action=compare",
       "icons": [{ "src": "./icons/icon-144.png", "sizes": "144x144" }]
     }
@@ -91,14 +91,14 @@
       "sizes": "1280x720",
       "type": "image/png",
       "platform": "wide",
-      "label": "分析介面預覽"
+      "label": " 分析介面預覽 "
     },
     {
       "src": "./screenshots/screen2.png",
       "sizes": "1280x720",
       "type": "image/png",
       "platform": "wide",
-      "label": "比較表預覽"
+      "label": " 比較表預覽 "
     }
   ],
   "related_applications": [],
