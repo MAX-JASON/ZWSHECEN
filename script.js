@@ -1900,16 +1900,11 @@ function switchTab(tabId) {
         targetTab.setAttribute('aria-selected', 'true');
     }
     
-    // 顯示目標內容 - 添加漸變效果
+    // 顯示目標內容並重置滾動位置
     const targetPane = document.getElementById(tabId);
     if (targetPane) {
-        targetPane.classList.add('fade');
-        setTimeout(() => {
-            targetPane.classList.add('show', 'active');
-        }, 50);
-        
-        // 重置目標面板的滾動位置，但不滾動整個頁面
-        targetPane.scrollTop = 0;
+        targetPane.classList.add('show', 'active');
+        targetPane.scrollTop = 0; // 重置滾動位置
     }
     
     // 更新進度條

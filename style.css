@@ -191,7 +191,7 @@ body {
 .panel {
     background-color: var(--panel-bg);
     border-radius: 8px;
-    padding: 20px;
+    padding: 15px;
     position: relative;
     backdrop-filter: blur(5px);
     border: 1px solid var(--panel-border);
@@ -201,6 +201,7 @@ body {
     animation: panelFadeIn 0.5s ease-out forwards;
     opacity: 0;
     transition: padding 0.3s ease, margin 0.3s ease;
+    margin-bottom: 15px;
 }
 
 @keyframes panelFadeIn {
@@ -357,14 +358,14 @@ body {
     color: var(--accent-blue);
     font-weight: 600;
     text-transform: uppercase;
-    padding: 12px;
+    padding: 8px 10px;
     font-size: 14px;
     text-shadow: 0 0 8px rgba(0, 229, 255, 0.8);
     text-align: center;
 }
 
 .tech-table td {
-    padding: 12px;
+    padding: 8px 10px;
     border-bottom: 1px solid rgba(0, 229, 255, 0.1);
     background-color: rgba(6, 28, 56, 0.4);
     text-align: center;
@@ -400,6 +401,7 @@ body {
     letter-spacing: 1px;
     position: relative;
     overflow: hidden;
+    margin-bottom: 8px;
 }
 
 .btn-tech:hover {
@@ -556,6 +558,7 @@ body {
     border: 1px solid rgba(0, 229, 255, 0.3);
     color: var(--text-color);
     border-radius: 4px;
+    margin-bottom: 8px;
 }
 
 .form-control:focus, .form-select:focus {
@@ -589,11 +592,13 @@ body {
     overflow: hidden;
     margin: 15px 0;
     border: 1px solid rgba(0, 229, 255, 0.5);
+    position: relative;
 }
 
 .tech-progress .progress-bar {
     background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
     box-shadow: 0 0 10px var(--accent-blue-glow);
+    transition: width 0.5s ease;
 }
 
 /* 科技卡片 */
@@ -602,12 +607,12 @@ body {
     border: 1px solid var(--panel-border);
     border-radius: 6px;
     overflow: hidden;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .tech-card-header {
     background-color: rgba(0, 229, 255, 0.1);
-    padding: 12px 15px;
+    padding: 10px 12px;
     color: var(--accent-blue);
     font-weight: 600;
     position: relative;
@@ -639,6 +644,8 @@ body {
     transition: all 0.3s ease;
     box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
     text-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
+    margin-bottom: 40px;
+    z-index: 20;
 }
 
 .btn-tech-action:hover {
@@ -751,7 +758,8 @@ body {
     border: none;
     color: var(--text-color);
     margin-right: 5px;
-    padding: 10px 20px;
+    padding: 8px 15px;
+    min-height: 40px;
 }
 
 .tech-tabs .nav-link.active {
@@ -782,7 +790,8 @@ body {
     box-shadow: inset 0 0 20px rgba(0, 229, 255, 0.1);
     overflow: hidden;
     margin-bottom: 20px;
-    min-height: 300px;
+    min-height: auto;
+    height: auto;
 }
 
 .chart-container::before {
@@ -967,6 +976,7 @@ body {
     .row {
         margin-left: -10px;
         margin-right: -10px;
+        margin-bottom: 10px;
     }
     
     .col-md-6 {
@@ -1145,7 +1155,7 @@ body {
 /* 確保頁面內容嚴格限制在頁籤內，不能滾動超出 */
 .tab-content {
     position: relative;
-    min-height: calc(100vh - 270px);
+    min-height: auto;
     overflow: hidden;
 }
 
@@ -1263,6 +1273,7 @@ body {
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch; /* 為iOS提供流暢滾動 */
     padding-bottom: 40px;
+    scroll-behavior: smooth; /* 添加平滑滾動效果 */
 }
 
 .tab-content > .tab-pane {
@@ -1351,11 +1362,12 @@ body {
 
 /* iPad專用滾動優化 */
 .ipad-device .single-tab-content {
-    max-height: calc(100vh - 300px);
+    max-height: none;
+    height: auto;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     margin: 0;
-    padding-right: 10px;
+    padding-bottom: 120px;
 }
 
 .ipad-device .single-tab-content::-webkit-scrollbar {
@@ -1794,7 +1806,7 @@ body {
 
 /* 避免頁面在鍵盤開啟時的跳動 */
 .ios-keyboard-open {
-    height: 100% !important;
+    height: 100% !重要;
     position: fixed;
     width: 100%;
 }
@@ -1803,4 +1815,240 @@ body {
 .ios-device .dashboard-container,
 .ios-device .single-tab-content {
     overscroll-behavior: none;
+}
+
+/* 確保內容不會過度延伸 */
+.chart-container {
+    min-height: auto;
+    height: auto;
+}
+
+/* 縮短表單控件間距 */
+.form-control, .form-select, .btn {
+    margin-bottom: 8px;
+}
+
+/* 縮短內容長度，優化滾動 */
+.panel {
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.tech-card {
+    margin-bottom: 15px;
+}
+
+.tech-card-header {
+    padding: 10px 12px;
+}
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+/* 減少空隙和填充 */
+.row {
+    margin-bottom: 10px;
+}
+
+/* 確保計算按鈕區域有足夠空間 */
+.action-button-container {
+    margin-top: 20px;
+    margin-bottom: 60px;
+    position: relative;
+    z-index: 10;
+}
+
+/* 減少表格間距 */
+.tech-table th, 
+.tech-table td {
+    padding: 8px 10px;
+}
+
+/* 改進iPad上的滾動體驗 */
+.ipad-device .single-tab-content {
+    max-height: none;
+    height: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    padding-bottom: 120px;
+}
+
+/* 讓計算按鈕始終可見和可點擊 */
+.ipad-device .btn-tech-action {
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 20;
+}
+
+/* 修復iOS滾動問題 */
+.ios-device .dashboard-container,
+.ios-device .single-tab-content,
+.ios-device .tab-pane {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+}
+
+/* 減少頁籤區域的高度 */
+.tech-tabs .nav-link {
+    padding: 8px 15px;
+    min-height: 40px;
+}
+
+/* 調整內容區域填充，確保所有內容可見 */
+.tab-content {
+    min-height: auto;
+}
+
+.tab-content > .tab-pane {
+    padding-bottom: 100px;
+}
+
+/* 一般iPad支持 - 針對橫向/縱向 */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .ipad-device {
+        /* 通用iPad優化 */
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        touch-action: manipulation;
+    }
+    
+    /* 確保所有內容區正確滾動 */
+    .ipad-device .tab-content,
+    .ipad-device .single-tab-content {
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        overscroll-behavior-y: none !important;
+    }
+}
+
+/* iPad橫向模式 - 使用最高優先級強制布局適配 */
+@media (min-width: 768px) and (orientation: landscape) {
+    /* 強制網格布局適配 */
+    .ipad-device.ios-landscape .dashboard-grid,
+    .ios-landscape .dashboard-grid {
+        display: grid !important;
+        grid-template-columns: repeat(4, 1fr) !important;
+        grid-gap: 15px !important;
+    }
+    
+    /* 強制調整面板尺寸 */
+    .ipad-device.ios-landscape .panel,
+    .ios-landscape .panel {
+        padding: 15px !important;
+    }
+    
+    /* 確保圖表高度一致 */
+    .ipad-device.ios-landscape .chart-container,
+    .ios-landscape .chart-container {
+        height: 380px !important;
+        min-height: 380px !重要;
+        max-height: 380px !重要;
+    }
+    
+    /* 強制做圖表橫向布局 */
+    .ipad-device.ios-landscape .chart-row,
+    .ios-landscape .chart-row {
+        display: grid !重要;
+        grid-template-columns: repeat(2, 1fr) !重要;
+        grid-gap: 15px !重要;
+    }
+    
+    /* 調整列寬度 */
+    .ipad-device.ios-landscape .chart-row > [class*="col-"],
+    .ios-landscape .chart-row > [class*="col-"] {
+        max-width: 100% !重要;
+        width: 100% !重要;
+        padding-left: 0 !重要;
+        padding-right: 0 !重要;
+    }
+    
+    /* 縮小表格間距 */
+    .ipad-device.ios-landscape .tech-table td,
+    .ipad-device.ios-landscape .tech-table th,
+    .ios-landscape .tech-table td,
+    .ios-landscape .tech-table th {
+        padding: 8px 10px !重要;
+    }
+    
+    /* 調整間距 */
+    .ipad-device.ios-landscape .row,
+    .ios-landscape .row {
+        margin-bottom: 15px !重要;
+    }
+}
+
+/* iPad縱向模式 - 使用最高優先級強制布局適配 */
+@media (min-width: 768px) and (orientation: portrait) {
+    /* 強制網格布局適配 */
+    .ipad-device.ios-portrait .dashboard-grid,
+    .ios-portrait .dashboard-grid {
+        display: grid !重要;
+        grid-template-columns: repeat(2, 1fr) !重要;
+        grid-gap: 10px !重要;
+    }
+    
+    /* 強制調整面板尺寸 */
+    .ipad-device.ios-portrait .panel,
+    .ios-portrait .panel {
+        padding: 12px !重要;
+    }
+    
+    /* 確保圖表高度一致 */
+    .ipad-device.ios-portrait .chart-container,
+    .ios-portrait .chart-container {
+        height: 320px !重要;
+        min-height: 320px !重要;
+        max-height: 320px !重要;
+    }
+    
+    /* 縮小表格間距 */
+    .ipad-device.ios-portrait .tech-table td,
+    .ipad-device.ios-portrait .tech-table th,
+    .ios-portrait .tech-table td,
+    .ios-portrait .tech-table th {
+        padding: 8px !重要;
+    }
+}
+
+/* 強制類適用於任何方向 - 解決組件跟隨方向切換的問題 */
+.forced-grid-row {
+    display: grid !重要;
+}
+
+.forced-grid-row > [class*="col-"] {
+    max-width: 100% !重要;
+    width: 100% !重要;
+    flex: none !重要;
+    padding-left: 0 !重要;
+    padding-right: 0 !重要;
+}
+
+/* 確保表格始終可見且填充父容器 */
+.tech-table {
+    width: 100% !重要;
+    table-layout: fixed !重要;
+}
+
+/* 確保內容容器可以正確滾動 */
+.single-tab-content {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+}
+
+/* 添加講指定圖表行的樣式，直接覆蓋Bootstrap的行樣式 */
+.chart-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -10px;
+    margin-left: -10px;
+    margin-bottom: 15px;
+}
+
+@media (orientation: landscape) {
+    .chart-row {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 15px !重要;
+    }
 }

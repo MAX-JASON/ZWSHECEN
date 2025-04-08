@@ -19,50 +19,56 @@
     document.documentElement.classList.add('ios-device');
     if (isIPad) document.documentElement.classList.add('ipad-device');
     
-    // 修復iOS橡皮筋效果
+    // 修復iOS橡皮筋效果並添加滾動到底部自動跳轉功能
     function fixIOSOverscroll() {
-        // 防止body過度滾動
+        // 防止body過度滾動 - 修改為更寬鬆的條件，允許更多正常滾動
         document.body.addEventListener('touchmove', function(e) {
-            if (e.target.closest('.allow-scroll')) return; // 允許特定元素滾動
-            if (e.touches.length > 1) return; // 允許多點觸控
-            e.preventDefault();
+            // 不再阻止所有的touchmove事件，只針對特殊情況
+            if (e.target.closest('.allow-scroll, .single-tab-content, .tab-pane, .form-control, .dashboard-container')) {
+                return; // 允許這些元素內部滾動
+            }
+            
+            // 只有明確不是滾動容器的元素才阻止默認行為
+            if (!e.target.closest('*[class*="scroll"]') && e.touches.length === 1) {
+                e.preventDefault();
+            }
         }, { passive: false });
         
-        // 允許滾動容器內部滾動，但阻止到達邊界時的過度滾動
-        document.querySelectorAll('.allow-scroll').forEach(element => {
-            element.addEventListener('touchstart', function(e) {
-                // 記錄初始滾動位置
-                this._scrollTop = this.scrollTop;
-                this._scrollLeft = this.scrollLeft;
-                this._scrollHeight = this.scrollHeight;
-                this._scrollWidth = this.scrollWidth;
-                this._clientHeight = this.clientHeight;
-                this._clientWidth = this.clientWidth;
-            });
-            
+        // 允許滾動容器內部滾動，但使用更寬鬆的邊界檢測
+        document.querySelectorAll('.allow-scroll, .single-tab-content, .tab-pane').forEach(element => {
             element.addEventListener('touchmove', function(e) {
-                // 檢查是否到達邊界
-                const scrollUp = e.touches[0].clientY > (e.target._touchY || 0);
-                const scrollDown = !scrollUp;
-                const scrollLeft = e.touches[0].clientX > (e.target._touchX || 0);
-                const scrollRight = !scrollLeft;
+                // 移除過度嚴格的邊界檢測，只阻止明顯的過度滾動
+                const scrollTop = this.scrollTop;
+                const scrollHeight = this.scrollHeight;
+                const height = this.clientHeight;
+                const delta = e.touches[0].clientY - (this._lastY || e.touches[0].clientY);
                 
-                // 記錄觸摸位置用於確定方向
-                e.target._touchY = e.touches[0].clientY;
-                e.target._touchX = e.touches[0].clientX;
+                this._lastY = e.touches[0].clientY;
                 
-                // 如果到達邊界且試圖繼續滾動則阻止默認行為
-                if ((this.scrollTop <= 0 && scrollUp) || 
-                    (this.scrollTop + this._clientHeight >= this._scrollHeight && scrollDown)) {
+                // 只有當已經滾動到頂部且仍要向下拉，或已經滾動到底部且仍要向上拉時才阻止
+                if ((scrollTop <= 0 && delta > 10) || 
+                    (scrollTop + height >= scrollHeight - 5 && delta < -10)) {
                     e.preventDefault();
                 }
-                
-                if ((this.scrollLeft <= 0 && scrollLeft) || 
-                    (this.scrollLeft + this._clientWidth >= this._scrollWidth && scrollRight)) {
+
+                // 如果滾動到底部，觸發跳轉到下一頁
+                if (scrollTop + height >= scrollHeight - 5) {
                     e.preventDefault();
+                    jumpToNextPage();
                 }
             }, { passive: false });
         });
+    }
+
+    // 跳轉到下一頁的功能
+    function jumpToNextPage() {
+        const activeTab = document.querySelector('.nav-link.active');
+        if (activeTab) {
+            const nextTab = activeTab.parentElement.nextElementSibling?.querySelector('.nav-link');
+            if (nextTab && !nextTab.hasAttribute('disabled')) {
+                nextTab.click();
+            }
+        }
     }
     
     // 修復iOS點擊延遲300ms問題
@@ -143,6 +149,9 @@
                     return false;
                 }
                 
+                // 標記正在進行頁籤切換
+                window._isTabSwitching = true;
+                
                 // 手動處理頁籤切換
                 // 1. 取消激活其他頁籤
                 tabLinks.forEach(tab => {
@@ -165,10 +174,16 @@
                 // 3. 顯示目標內容
                 targetTab.classList.add('show', 'active');
                 
-                // 4. 重置滾動位置
+                // 4. 重置滾動位置 - 使用更可靠的方式
                 setTimeout(() => {
+                    // 直接回到頂部而不使用scrollTo (避免兼容性問題)
                     targetTab.scrollTop = 0;
-                }, 0);
+                    // 同時也確保容器滾動到頂部
+                    const container = document.querySelector('.dashboard-container');
+                    if (container) {
+                        container.scrollTop = 0;
+                    }
+                }, 50);
                 
                 // 5. 觸發進度更新
                 const tabId = targetSelector.replace('#', '');
@@ -193,144 +208,283 @@
     
     // iOS設備旋轉處理
     function handleIOSOrientationChange() {
-        // 檢測方向變化
+        // 監聽方向變化事件
         window.addEventListener('orientationchange', function() {
             console.log('iOS方向變化:', window.orientation);
             
             // 添加過渡類
             document.body.classList.add('ios-orientation-changing');
             
-            // 使用遮罩隱藏過渡效果
-            const orientationMask = document.createElement('div');
-            orientationMask.className = 'orientation-transition-mask';
-            orientationMask.style.position = 'fixed';
-            orientationMask.style.top = '0';
-            orientationMask.style.left = '0';
-            orientationMask.style.width = '100%';
-            orientationMask.style.height = '100%';
-            orientationMask.style.backgroundColor = '#040b19';
-            orientationMask.style.zIndex = '9999';
-            orientationMask.style.opacity = '0';
-            orientationMask.style.transition = 'opacity 0.2s ease-in';
-            document.body.appendChild(orientationMask);
+            // 創建全屏遮罩，防止布局閃爍
+            const mask = document.createElement('div');
+            mask.className = 'orientation-mask';
+            mask.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: #040b19;
+                z-index: 9999;
+                transition: opacity 0.3s;
+            `;
+            document.body.appendChild(mask);
             
-            // 淡入遮罩
+            // 延遲處理以確保方向實際改變
             setTimeout(() => {
-                orientationMask.style.opacity = '1';
-            }, 10);
-            
-            // 處理方向變化完成後的操作
-            setTimeout(() => {
-                // 重新計算布局
+                // 強制重新計算布局 - 多次調用以確保生效
                 updateLayout();
                 
-                // 修復頁籤問題
-                fixActiveTab();
-                
-                // 重新定位滾動位置
-                resetScrollPositions();
-                
-                // 淡出遮罩並移除
-                orientationMask.style.opacity = '0';
+                // 等待布局穩定
                 setTimeout(() => {
-                    orientationMask.remove();
-                    document.body.classList.remove('ios-orientation-changing');
-                    document.body.classList.add('ios-orientation-changed');
+                    // 二次更新以確保生效
+                    updateLayout();
                     
-                    // 在動畫完成後重新渲染圖表
+                    // 修復頁籤並重置滾動位置
+                    fixActiveTab();
+                    resetScrollPositions();
+                    
+                    // 等待布局完成後重繪圖表
                     setTimeout(() => {
                         redrawCharts();
-                        document.body.classList.remove('ios-orientation-changed');
-                    }, 300);
-                }, 250);
+                        
+                        // 完成後淡出並移除遮罩
+                        mask.style.opacity = '0';
+                        setTimeout(() => {
+                            mask.remove();
+                            document.body.classList.remove('ios-orientation-changing');
+                        }, 300);
+                        
+                    }, 200);
+                }, 300);
             }, 300);
         });
+        
+        // 同時監聽resize事件，作為備用
+        let lastWidth = window.innerWidth;
+        window.addEventListener('resize', function() {
+            // 只在寬度變化顯著時觸發（避免鍵盤彈出等情況）
+            if (Math.abs(window.innerWidth - lastWidth) > 100) {
+                console.log('顯著寬度變化:', lastWidth, '->', window.innerWidth);
+                lastWidth = window.innerWidth;
+                
+                // 延遲處理以避免過於頻繁
+                clearTimeout(window._resizeTimer);
+                window._resizeTimer = setTimeout(() => {
+                    updateLayout();
+                    setTimeout(redrawCharts, 100);
+                }, 200);
+            }
+        });
+        
+        // 初始化布局
+        updateLayout();
     }
     
     // 更新布局
     function updateLayout() {
         const isLandscape = window.innerWidth > window.innerHeight;
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+        
+        console.log(`設備方向已變化：${isLandscape ? '橫向' : '縱向'}, 尺寸: ${screenWidth}x${screenHeight}`);
         
         // 更新方向類
         document.body.classList.toggle('ios-landscape', isLandscape);
         document.body.classList.toggle('ios-portrait', !isLandscape);
         
+        // 強制應用布局樣式
+        const rootStyle = document.documentElement.style;
+        
+        if (isLandscape) {
+            // 橫向模式 - 強制4列布局
+            rootStyle.setProperty('--grid-columns', '4');
+            rootStyle.setProperty('--grid-gap', '15px');
+            rootStyle.setProperty('--chart-height', '380px');
+            rootStyle.setProperty('--panel-padding', '15px');
+            
+            // 直接修改網格布局
+            document.querySelectorAll('.dashboard-grid').forEach(grid => {
+                grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+                grid.style.gridGap = '15px';
+            });
+            
+            // 調整圖表容器
+            document.querySelectorAll('.chart-container').forEach(chart => {
+                chart.style.height = '380px';
+            });
+            
+            // 適配數據行
+            document.querySelectorAll('.row:not(.no-landscape-adapt)').forEach(row => {
+                // 檢查行是否包含足夠的列進行橫向排列
+                const cols = row.querySelectorAll('.col-md-6, .col-lg-6, [class*="col-"]');
+                if (cols.length >= 2 && cols.length <= 4) {
+                    // 轉換為網格布局
+                    row.style.display = 'grid';
+                    row.style.gridTemplateColumns = `repeat(${Math.min(cols.length, 2)}, 1fr)`;
+                    row.style.gridGap = '15px';
+                    row.classList.add('forced-landscape-grid');
+                    
+                    // 強制子元素寬度
+                    cols.forEach(col => {
+                        col.style.maxWidth = '100%';
+                        col.style.width = '100%';
+                    });
+                }
+            });
+        } else {
+            // 縱向模式 - 強制2列布局
+            rootStyle.setProperty('--grid-columns', '2');
+            rootStyle.setProperty('--grid-gap', '10px');
+            rootStyle.setProperty('--chart-height', '320px');
+            rootStyle.setProperty('--panel-padding', '12px');
+            
+            // 直接修改網格布局
+            document.querySelectorAll('.dashboard-grid').forEach(grid => {
+                grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
+                grid.style.gridGap = '10px';
+            });
+            
+            // 調整圖表容器
+            document.querySelectorAll('.chart-container').forEach(chart => {
+                chart.style.height = '320px';
+            });
+            
+            // 恢復原始行布局
+            document.querySelectorAll('.forced-landscape-grid').forEach(row => {
+                row.style.display = '';
+                row.style.gridTemplateColumns = '';
+                row.style.gridGap = '';
+                row.classList.remove('forced-landscape-grid');
+                
+                // 恢復列寬度
+                const cols = row.querySelectorAll('.col-md-6, .col-lg-6, [class*="col-"]');
+                cols.forEach(col => {
+                    col.style.maxWidth = '';
+                    col.style.width = '';
+                });
+            });
+        }
+        
+        // 修復框架高度問題
+        fixFrameworkHeights(isLandscape);
+        
         // 觸發布局更新事件
         window.dispatchEvent(new CustomEvent('ios-layout-update', {
-            detail: { isLandscape }
+            detail: { isLandscape, width: screenWidth, height: screenHeight }
         }));
     }
     
-    // 修復活動頁籤
-    function fixActiveTab() {
-        const activeTabLink = document.querySelector('.nav-link.active');
-        if (activeTabLink) {
-            // 保存ID
-            const tabId = activeTabLink.getAttribute('data-bs-target') || 
-                         activeTabLink.getAttribute('href');
-            
-            // 重新激活頁籤
-            setTimeout(() => {
-                activeTabLink.click();
-            }, 50);
-        }
-    }
-    
-    // 重置滾動位置
-    function resetScrollPositions() {
-        // 重置主容器
-        const mainContainer = document.querySelector('.dashboard-container');
-        if (mainContainer) {
-            mainContainer.scrollTop = 0;
-        }
-        
-        // 重置活動面板
-        const activePane = document.querySelector('.tab-pane.active');
-        if (activePane) {
-            activePane.scrollTop = 0;
-        }
-        
-        // 重置所有滾動容器
-        document.querySelectorAll('.allow-scroll').forEach(el => {
-            el.scrollTop = 0;
+    // 新增：直接修復框架容器高度
+    function fixFrameworkHeights(isLandscape) {
+        // 修復內容容器高度
+        const contentHeight = isLandscape ? '75vh' : '70vh';
+        document.querySelectorAll('.tab-content, .tab-content > .tab-pane').forEach(el => {
+            el.style.minHeight = contentHeight;
+            el.style.height = 'auto';
         });
+        
+        // 固定面板高度
+        document.querySelectorAll('.panel').forEach(panel => {
+            panel.style.minHeight = 'auto';
+            panel.style.height = 'auto';
+        });
+        
+        // 確保圖表響應式布局
+        setTimeout(() => {
+            document.querySelectorAll('.chart-container canvas').forEach(canvas => {
+                const parent = canvas.parentElement;
+                if (parent) {
+                    canvas.style.width = '100%';
+                    canvas.style.maxHeight = (isLandscape ? '350px' : '300px');
+                }
+            });
+        }, 100);
     }
     
     // 重繪圖表
     function redrawCharts() {
-        if (window.Chart && window.Chart.instances) {
-            Object.values(window.Chart.instances).forEach(chart => {
-                try {
-                    chart.resize();
-                } catch (e) {
-                    console.warn('重繪圖表時發生錯誤:', e);
+        console.log('強制重繪所有圖表');
+        
+        // 首先嘗試使用Chart.js的resize方法
+        if (window.Chart) {
+            try {
+                // Chart.js v3的API
+                if (window.Chart.instances) {
+                    Object.values(window.Chart.instances).forEach(chart => {
+                        try {
+                            chart.resize();
+                            chart.render();
+                        } catch (e) {
+                            console.warn('使用Chart.js實例API重繪時出錯:', e);
+                        }
+                    });
+                } 
+                // Chart.js v2的API
+                else if (Chart.helpers && Chart.helpers.each) {
+                    Chart.helpers.each(Chart.instances, function(instance) {
+                        try {
+                            instance.resize();
+                            instance.render(true);
+                        } catch (e) {
+                            console.warn('使用Chart.js v2 API重繪時出錯:', e);
+                        }
+                    });
                 }
-            });
-        } else if (window.irrChartInstance) {
-            // 如果使用全局變量存儲圖表實例
-            const chartInstances = [
-                'irrChartInstance', 
-                'dividendChartInstance', 
-                'cumulativeDividendChartInstance',
-                'medicalChartInstance',
-                'radarChartInstance', 
-                'reportChartInstance',
-                'overallChartInstance'
-            ];
-            
-            chartInstances.forEach(instanceName => {
-                if (window[instanceName]) {
+            } catch (e) {
+                console.warn('嘗試使用Chart.js API重繪時出錯:', e);
+            }
+        }
+        
+        // 嘗試直接訪問圖表實例
+        const chartInstanceNames = [
+            'irrChartInstance', 
+            'dividendChartInstance', 
+            'cumulativeDividendChartInstance',
+            'medicalChartInstance',
+            'radarChartInstance', 
+            'reportChartInstance',
+            'overallChartInstance'
+        ];
+        
+        chartInstanceNames.forEach(name => {
+            if (window[name]) {
+                try {
+                    window[name].resize();
+                    window[name].update();
+                } catch (e) {
+                    console.warn(`重繪${name}失敗，嘗試替代方法`);
+                    
+                    // 替代方法：強制重設尺寸
                     try {
-                        window[instanceName].resize();
-                    } catch (e) {
-                        console.warn(`重繪${instanceName}時發生錯誤:`, e);
+                        const canvas = window[name].canvas;
+                        if (canvas) {
+                            const parent = canvas.parentElement;
+                            if (parent) {
+                                // 強制重設大小
+                                canvas.style.width = '100%';
+                                canvas.style.height = 'auto';
+                                
+                                // 強制更新
+                                window[name].resize();
+                                window[name].render();
+                            }
+                        }
+                    } catch (e2) {
+                        console.error(`無法重繪${name}:`, e2);
                     }
                 }
-            });
-        }
+            }
+        });
+        
+        // 最後嘗試：直接處理畫布尺寸
+        document.querySelectorAll('.chart-container canvas').forEach(canvas => {
+            canvas.style.width = '100%';
+            canvas.height = parseInt(getComputedStyle(canvas.parentNode).height);
+        });
     }
     
-    // 設置iOS專用樣式
+    // 設置iOS專用樣式 - 縮短內容並改進滾動
     function addIOSStyles() {
         const iosStyles = `
         .ios-device {
@@ -339,6 +493,66 @@
             touch-action: manipulation;
         }
         
+        /* 解決iPad橫向適配問題 - 直接覆蓋框架樣式 */
+        @media (min-width: 768px) {
+            .ios-device.ios-landscape .container {
+                max-width: none !important;
+                padding-left: 20px !important;
+                padding-right: 20px !important;
+            }
+            
+            .ios-device.ios-landscape .dashboard-grid {
+                display: grid !important;
+                grid-template-columns: repeat(4, 1fr) !important;
+                grid-gap: 15px !important;
+            }
+            
+            .ios-device.ios-landscape .row {
+                margin-left: -10px !important;
+                margin-right: -10px !important;
+            }
+            
+            .ios-device.ios-landscape .chart-container {
+                height: 380px !important;
+                max-height: 380px !important;
+            }
+            
+            .ios-device.ios-landscape canvas {
+                max-height: 350px !important;
+            }
+        }
+        
+        /* 縱向模式強制布局 */
+        @media (max-width: 1024px) and (orientation: portrait) {
+            .ios-device.ios-portrait .dashboard-grid {
+                display: grid !important;
+                grid-template-columns: repeat(2, 1fr) !important;
+                grid-gap: 10px !important;
+            }
+            
+            .ios-device.ios-portrait .chart-container {
+                height: 320px !important;
+                max-height: 320px !important;
+            }
+        }
+        
+        /* 強制列布局 */
+        .forced-landscape-grid {
+            display: grid !important;
+        }
+        
+        .forced-landscape-grid > [class*="col-"] {
+            max-width: 100% !important;
+            width: 100% !important;
+            padding: 0 !important;
+        }
+        
+        /* 縮短內容區高度，確保計算按鈕可見 */
+        .ios-device .single-tab-content {
+            padding-bottom: 120px !important; /* 確保底部有足夠空間 */
+        }
+        
+        /* 其他樣式保持不變 */
         .ios-active {
             opacity: 0.7;
             transform: scale(0.97);
@@ -348,73 +562,14 @@
         /* 增大觸控目標 */
         .ios-device button,
         .ios-device .btn,
-        .ios-device .nav-link,
-        .ios-device input,
-        .ios-device select,
-        .ios-device .form-control,
-        .ios-device .form-select {
+        .ios-device .nav-link {
             min-height: 44px;
         }
         
-        .ios-device .tab-content {
+        /* 確保計算按鈕始終可點擊，不會被滾動阻擋 */
+        .ios-device .btn-tech-action {
             position: relative;
-            height: auto;
-            min-height: 60vh;
-            overflow: hidden;
-        }
-        
-        .ios-device .tab-pane {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: auto;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.2s ease;
-            padding-bottom: 50px;
-            transform: translate3d(0,0,0);
-        }
-        
-        .ios-device .tab-pane.active {
-            opacity: 1;
-            visibility: visible;
-            position: relative;
-            z-index: 2;
-        }
-        
-        /* 防止捲軸影響點擊 */
-        .ios-device .tab-pane::-webkit-scrollbar {
-            width: 5px;
-            background: transparent;
-        }
-        
-        .ios-device .tab-pane::-webkit-scrollbar-thumb {
-            background: rgba(0, 229, 255, 0.5);
-            border-radius: 2.5px;
-        }
-        
-        /* 方向變化動畫 */
-        .ios-orientation-changing {
-            transition: none !important;
-        }
-        
-        .ios-orientation-changed {
-            animation: ios-orientation-flash 0.5s ease-out;
-        }
-        
-        @keyframes ios-orientation-flash {
-            0% { opacity: 0.7; }
-            100% { opacity: 1; }
-        }
-        
-        /* iPad特殊樣式 */
-        @media (min-width: 768px) {
-            .ipad-device .tab-content {
-                min-height: 70vh;
-            }
+            z-index: 100;
         }
         `;
         
@@ -465,23 +620,24 @@
     
     // 監聽DOM載入
     document.addEventListener('DOMContentLoaded', function() {
-        // 添加iOS專用樣式
+        if (!isIOS) return; // 提前檢查避免執行多餘代碼
+        
+        console.log('iOS設備檢測: iPad=' + isIPad);
+        
+        // 添加iOS專用樣式 - 立即添加
         addIOSStyles();
         
-        // 施加修復
+        // 施加修復 - 減少延遲以確保及時生效
         setTimeout(() => {
             fixIOSOverscroll();
             fixIOSTapDelay();
             fixIOSTabSwitching();
             fixIOSKeyboard();
             handleIOSHomeGesture();
-            handleIOSOrientationChange();
-            
-            // 初始化布局
-            updateLayout();
+            handleIOSOrientationChange(); // 這將執行初始化布局
             
             console.log('iOS觸控修復完成');
-        }, 100);
+        }, 50);
     });
     
     // 公開API
