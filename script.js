@@ -264,13 +264,14 @@ function calculateAndCompare() {
             renderCharts();
             
             // 啟用比較表頁籤
-            document.getElementById('comparison-tab').disabled = false;
-            document.getElementById('report-tab').disabled = false;
+            const comparisonTab = document.getElementById('comparison-tab');
+            comparisonTab.disabled = false;
+            comparisonTab.classList.add('unlocked');
             
             // 隱藏載入動畫
             hideLoading();
             
-            // 切換到比較表頁籤
+            // 切換到比較表頁籤 - 使用修正後的頁籤切換函數
             switchTab('comparison');
             
             // 更新AI訊息
@@ -1358,38 +1359,50 @@ function fixTabSwitching() {
 function generateReport() {
     console.log("生成報告...");
     
-    // 當前日期
-    document.getElementById('reportDate').textContent = new Date().toLocaleDateString('zh-TW');
-    
-    // 貨幣類型
-    document.getElementById('reportCurrency').textContent = 
-        policyData.currencyType === 'USD' ? '美金 (USD)' : '台幣 (TWD)';
-    
-    // 最佳保單信息
-    const bestPolicy = findBestPolicy();
-    document.getElementById('bestPolicyName').textContent = bestPolicy.name;
-    document.getElementById('bestPolicyScore').textContent = bestPolicy.overallScore.toFixed(1);
-    document.getElementById('bestPolicyIRR').textContent = (bestPolicy.irr * 100).toFixed(2) + "%";
-    document.getElementById('bestPolicyDividend').textContent = bestPolicy.dividend.toFixed(2) + "%";
-    
-    // 更新推薦內容
-    const recommendationText = `
-        根據您的需求分析，${bestPolicy.name}在綜合評分中表現最佳，總評分為${bestPolicy.overallScore.toFixed(1)}分。
-        此保單提供${bestPolicy.dividend.toFixed(2)}%的年配息率，年化報酬率(IRR)為${(bestPolicy.irr * 100).toFixed(2)}%，
-        醫療保障得分為${bestPolicy.medicalScore.toFixed(1)}分。
-        其中配息收益佔總報酬的${bestPolicy.dividendRatio.toFixed(1)}%，提供穩定的現金流。
-        建議您考慮選擇此產品，以獲得良好的保障和投資回報。
-    `;
-    document.getElementById('reportRecommendation').innerHTML = `
-        <h5 class="tech-bright-text">專業建議:</h5>
-        <p>${recommendationText}</p>
-    `;
-    
-    // 渲染報告圖表
-    renderReportChart();
-    
-    // 更新詳細比較表
-    updateReportDetailTable();
+    try {
+        // 當前日期
+        document.getElementById('reportDate').textContent = new Date().toLocaleDateString('zh-TW');
+        
+        // 貨幣類型
+        document.getElementById('reportCurrency').textContent = 
+            policyData.currencyType === 'USD' ? '美金 (USD)' : '台幣 (TWD)';
+        
+        // 最佳保單信息
+        const bestPolicy = findBestPolicy();
+        document.getElementById('bestPolicyName').textContent = bestPolicy.name;
+        document.getElementById('bestPolicyScore').textContent = bestPolicy.overallScore.toFixed(1);
+        document.getElementById('bestPolicyIRR').textContent = (bestPolicy.irr * 100).toFixed(2) + "%";
+        document.getElementById('bestPolicyDividend').textContent = bestPolicy.dividend.toFixed(2) + "%";
+        
+        // 更新推薦內容
+        const recommendationText = `
+            根據您的需求分析，${bestPolicy.name}在綜合評分中表現最佳，總評分為${bestPolicy.overallScore.toFixed(1)}分。
+            此保單提供${bestPolicy.dividend.toFixed(2)}%的年配息率，年化報酬率(IRR)為${(bestPolicy.irr * 100).toFixed(2)}%，
+            醫療保障得分為${bestPolicy.medicalScore.toFixed(1)}分。
+            其中配息收益佔總報酬的${bestPolicy.dividendRatio.toFixed(1)}%，提供穩定的現金流。
+            建議您考慮選擇此產品，以獲得良好的保障和投資回報。
+        `;
+        document.getElementById('reportRecommendation').innerHTML = `
+            <h5 class="tech-bright-text">專業建議:</h5>
+            <p>${recommendationText}</p>
+        `;
+        
+        // 渲染報告圖表
+        renderReportChart();
+        
+        // 更新詳細比較表
+        updateReportDetailTable();
+        
+        // 啟用報告頁籤
+        const reportTab = document.getElementById('report-tab');
+        reportTab.disabled = false;
+        reportTab.classList.add('unlocked');
+        
+        // 切換到報告頁籤
+        switchTab('report');
+    } catch (error) {
+        console.error("生成報告時出錯:", error);
+    }
 }
 
 // 渲染報告圖表，包含配息分析
@@ -1865,13 +1878,38 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// 頁籤切換函數
+// 頁籤切換函數 - 修正滾輪問題版本
 function switchTab(tabId) {
-    // 啟用指定的頁籤
-    const tabToShow = document.getElementById(`${tabId}-tab`);
-    if (tabToShow) {
-        const tab = new bootstrap.Tab(tabToShow);
-        tab.show();
+    console.log(`切換到頁籤: ${tabId}`);
+    
+    // 移除所有頁籤的活動狀態
+    document.querySelectorAll('#analysisTab .nav-link').forEach(tab => {
+        tab.classList.remove('active');
+        tab.setAttribute('aria-selected', 'false');
+    });
+    
+    // 移除所有內容面板的活動狀態
+    document.querySelectorAll('.tab-pane').forEach(pane => {
+        pane.classList.remove('show', 'active');
+    });
+    
+    // 激活目標頁籤
+    const targetTab = document.getElementById(`${tabId}-tab`);
+    if (targetTab) {
+        targetTab.classList.add('active');
+        targetTab.setAttribute('aria-selected', 'true');
+    }
+    
+    // 顯示目標內容 - 添加漸變效果
+    const targetPane = document.getElementById(tabId);
+    if (targetPane) {
+        targetPane.classList.add('fade');
+        setTimeout(() => {
+            targetPane.classList.add('show', 'active');
+        }, 50);
+        
+        // 重置目標面板的滾動位置，但不滾動整個頁面
+        targetPane.scrollTop = 0;
     }
     
     // 更新進度條
@@ -1893,9 +1931,22 @@ function updateProgressBar(tabId) {
             step = "步驟 3/3";
         }
         
-        progressBar.style.width = `${progress}%`;
-        progressBar.setAttribute('aria-valuenow', progress);
-        progressBar.textContent = step;
+        // 添加動畫效果
+        progressBar.style.transition = "width 0.8s ease";
+        setTimeout(() => {
+            progressBar.style.width = `${progress}%`;
+            progressBar.setAttribute('aria-valuenow', progress);
+            progressBar.textContent = step;
+        }, 100);
+    }
+}
+
+// 返回上一頁函數
+function goBack(fromTab) {
+    if (fromTab === 'comparison') {
+        switchTab('input');
+    } else if (fromTab === 'report') {
+        switchTab('comparison');
     }
 }
 
@@ -1991,6 +2042,29 @@ document.addEventListener('DOMContentLoaded', function() {
             calculateBtn.addEventListener('click', function() {
                 console.log("計算按鈕被點擊");
                 calculateAndCompare();
+            });
+        }
+        
+        // 初始化返回按鈕
+        const backToInputBtn = document.getElementById('backToInput');
+        if (backToInputBtn) {
+            backToInputBtn.addEventListener('click', function() {
+                goBack('comparison');
+            });
+        }
+        
+        const backToComparisonBtn = document.getElementById('backToComparison');
+        if (backToComparisonBtn) {
+            backToComparisonBtn.addEventListener('click', function() {
+                goBack('report');
+            });
+        }
+        
+        // 初始化報告生成按鈕
+        const generateReportBtn = document.getElementById('generateReportBtn');
+        if (generateReportBtn) {
+            generateReportBtn.addEventListener('click', function() {
+                generateReport();
             });
         }
         
@@ -2202,3 +2276,297 @@ renderCharts = function() {
         canvas.setAttribute('data-orientation-aware', 'true');
     });
 }
+
+// 添加對滾輪事件的處理
+document.addEventListener('DOMContentLoaded', function() {
+    // ...existing code...
+    
+    // 阻止滾輪事件導致頁面切換
+    document.querySelectorAll('.tab-pane').forEach(pane => {
+        pane.addEventListener('wheel', function(e) {
+            // 阻止事件冒泡到可能導致頁籤切換的父元素
+            e.stopPropagation();
+        });
+    });
+    
+    // 確保頁籤切換只通過按鈕觸發
+    document.querySelectorAll('.btn-nav, #analysisTab .nav-link, #backToInput, #backToComparison').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            // 阻止點擊事件可能導致的頁面滾動
+            e.preventDefault();
+            
+            // 其他原有處理邏輯...
+            
+            // 防止事件冒泡
+            e.stopPropagation();
+        });
+    });
+    
+    // ...existing code...
+});
+
+// 修正iOS上的滾動問題
+function fixIOSScrolling() {
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.platform) || 
+                 (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    
+    if (isIOS) {
+        document.querySelectorAll('.single-tab-content').forEach(tab => {
+            // 修復iOS橡皮筋效果
+            tab.addEventListener('touchmove', function(e) {
+                const scrollTop = tab.scrollTop;
+                const scrollHeight = tab.scrollHeight;
+                const height = tab.clientHeight;
+                
+                if ((scrollTop <= 0 && e.touches[0].clientY > 0) || 
+                    (scrollTop + height >= scrollHeight && e.touches[0].clientY < 0)) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        });
+    }
+}
+
+// 在文檔加載後調用修復函數
+document.addEventListener('DOMContentLoaded', function() {
+    // ...existing code...
+    fixIOSScrolling();
+    // ...existing code...
+});
+
+// 完全重寫頁籤切換函數，解決iPad問題
+function switchTab(tabId) {
+    console.log(`切換到頁籤: ${tabId}`);
+    
+    // 獲取頁籤元素
+    const targetTab = document.getElementById(`${tabId}-tab`);
+    if (!targetTab || targetTab.hasAttribute('disabled')) {
+        console.log('頁籤被禁用或不存在，無法切換');
+        return;
+    }
+    
+    // 手動處理頁籤切換邏輯
+    const allTabs = document.querySelectorAll('#analysisTab .nav-link');
+    const allPanes = document.querySelectorAll('.tab-pane');
+    
+    // 停用所有頁籤和面板
+    allTabs.forEach(tab => {
+        tab.classList.remove('active');
+        tab.setAttribute('aria-selected', 'false');
+    });
+    
+    allPanes.forEach(pane => {
+        pane.classList.remove('show', 'active');
+    });
+    
+    // 激活目標頁籤和面板
+    targetTab.classList.add('active');
+    targetTab.setAttribute('aria-selected', 'true');
+    
+    const targetPane = document.getElementById(tabId);
+    if (targetPane) {
+        targetPane.classList.add('show', 'active');
+        
+        // 重置面板滾動位置
+        setTimeout(() => {
+            if (targetPane.scrollTo) {
+                targetPane.scrollTo(0, 0);
+            } else {
+                targetPane.scrollTop = 0;
+            }
+        }, 50);
+    }
+    
+    // 更新進度條
+    updateProgressBar(tabId);
+    
+    // 在iPad上修復可能的滾動問題
+    if (/iPad|iPhone|iPod/.test(navigator.platform) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
+        // 防止整頁滾動
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }
+}
+
+// 更新進度條，添加更好的視覺反饋
+function updateProgressBar(tabId) {
+    const progressBar = document.getElementById('progressBar');
+    if (progressBar) {
+        let progress = 33;
+        let step = "步驟 1/3";
+        
+        if (tabId === 'comparison') {
+            progress = 66;
+            step = "步驟 2/3";
+        } else if (tabId === 'report') {
+            progress = 100;
+            step = "步驟 3/3";
+        }
+        
+        // 強化過渡效果
+        progressBar.style.transition = "width 0.8s cubic-bezier(0.22, 0.61, 0.36, 1), background-color 0.8s ease";
+        
+        // 顏色漸變效果
+        const colors = ['rgba(0, 229, 255, 0.8)', 'rgba(0, 255, 157, 0.8)'];
+        const gradient = `linear-gradient(90deg, ${colors[0]} 0%, ${colors[1]} 100%)`;
+        progressBar.style.background = gradient;
+        
+        // 應用尺寸變化
+        setTimeout(() => {
+            progressBar.style.width = `${progress}%`;
+            progressBar.setAttribute('aria-valuenow', progress);
+            progressBar.textContent = step;
+            
+            // 添加脈衝動畫效果
+            progressBar.classList.add('pulse-animation');
+            setTimeout(() => {
+                progressBar.classList.remove('pulse-animation');
+            }, 800);
+        }, 50);
+    }
+}
+
+// 初始化iPad專用優化
+function initIPadOptimizations() {
+    const isIPad = /iPad/.test(navigator.userAgent) || 
+                   (/Macintosh/i.test(navigator.platform) && navigator.maxTouchPoints > 1);
+    
+    if (isIPad) {
+        console.log('檢測到iPad，應用專用優化');
+        document.body.classList.add('ipad-device');
+        
+        // 強制頁面保持固定尺寸，防止橡皮筋效果
+        document.documentElement.style.height = '100%';
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.height = '100%';
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+        
+        // 處理全局滾動
+        const container = document.querySelector('.dashboard-container');
+        if (container) {
+            container.style.height = '100%';
+            container.style.overflowY = 'auto';
+            container.style.overflowX = 'hidden';
+            container.style.webkitOverflowScrolling = 'touch';
+            
+            // 防止過度滾動
+            container.addEventListener('touchmove', function(e) {
+                if (this.scrollTop <= 0 && e.touches[0].clientY > 0) {
+                    e.preventDefault();
+                }
+                if (this.scrollTop + this.clientHeight >= this.scrollHeight && e.touches[0].clientY < 0) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        }
+        
+        // 改善頁籤滾動體驗
+        document.querySelectorAll('.single-tab-content').forEach(content => {
+            // 防止iOS橡皮筋效果
+            content.addEventListener('touchmove', function(e) {
+                // 允許正常滾動，但阻止到達邊界時的過度滾動
+                const scrollTop = this.scrollTop;
+                const scrollHeight = this.scrollHeight;
+                const height = this.clientHeight;
+                
+                if ((scrollTop <= 0 && e.touches[0].clientY > 0) || 
+                    (scrollTop + height >= scrollHeight && e.touches[0].clientY < 0)) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        });
+        
+        // 阻止所有可能導致頁籤切換問題的默認事件
+        document.addEventListener('gesturestart', preventDefault, { passive: false });
+        document.addEventListener('gesturechange', preventDefault, { passive: false });
+    }
+}
+
+// 阻止默認事件助手函數
+function preventDefault(e) {
+    e.preventDefault();
+}
+
+// 在DOM載入後初始化
+document.addEventListener('DOMContentLoaded', function() {
+    // ...existing code...
+    
+    // 添加iPad優化初始化
+    initIPadOptimizations();
+    
+    // 確保頁籤的點擊區域足夠大
+    document.querySelectorAll('.nav-tabs .nav-link').forEach(tab => {
+        tab.style.minHeight = '44px';
+        tab.style.display = 'flex';
+        tab.style.alignItems = 'center';
+    });
+    
+    // 修復頁籤重新激活問題
+    window.addEventListener('resize', debounce(function() {
+        // 在調整大小後重新激活當前頁籤
+        const activeTab = document.querySelector('#analysisTab .nav-link.active');
+        if (activeTab) {
+            const tabId = activeTab.id.replace('-tab', '');
+            // 延遲以確保尺寸計算已完成
+            setTimeout(() => {
+                switchTab(tabId);
+            }, 100);
+        }
+    }, 250));
+    
+    // ...existing code...
+});
+
+// 專門處理iOS旋轉問題的函數
+function handleIOSOrientationChange() {
+    // 添加遮罩以隱藏旋轉期間的視覺抖動
+    const mask = document.createElement('div');
+    mask.style.position = 'fixed';
+    mask.style.top = '0';
+    mask.style.left = '0';
+    mask.style.width = '100%';
+    mask.style.height = '100%';
+    mask.style.backgroundColor = '#040b19';
+    mask.style.zIndex = '10000';
+    mask.style.transition = 'opacity 0.5s ease';
+    document.body.appendChild(mask);
+    
+    // 延遲後重新激活頁籤和布局
+    setTimeout(() => {
+        // 獲取當前激活的頁籤
+        const activeTab = document.querySelector('#analysisTab .nav-link.active');
+        if (activeTab) {
+            const tabId = activeTab.id.replace('-tab', '');
+            switchTab(tabId);
+        }
+        
+        // 重新渲染所有圖表
+        redrawAllCharts();
+        
+        // 淡出遮罩
+        mask.style.opacity = '0';
+        setTimeout(() => {
+            mask.remove();
+        }, 500);
+    }, 300);
+}
+
+// 檢測是否為iPad
+function isIPad() {
+    return /iPad/.test(navigator.userAgent) || 
+           (/Macintosh/i.test(navigator.platform) && navigator.maxTouchPoints > 1);
+}
+
+// 更新設備方向處理
+window.addEventListener('orientationchange', function() {
+    console.log('方向已變更:', window.orientation);
+    
+    if (isIPad()) {
+        handleIOSOrientationChange();
+    } else {
+        handleOrientationChange();
+    }
+});
+
+// ...existing code...

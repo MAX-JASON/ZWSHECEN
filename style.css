@@ -1028,7 +1028,7 @@ body {
     
     /* 確保圖表寬度合理 */
     canvas {
-        max-width: 100% !important;
+        max-width: 100% !重要;
     }
 }
 
@@ -1140,4 +1140,667 @@ body {
 
 .tab-content > .active {
     display: block;
+}
+
+/* 確保頁面內容嚴格限制在頁籤內，不能滾動超出 */
+.tab-content {
+    position: relative;
+    min-height: calc(100vh - 270px);
+    overflow: hidden;
+}
+
+/* 修復頁籤切換問題 */
+.tab-content > .tab-pane {
+    display: none;
+    position: absolute;
+    width: 100%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.tab-content > .active {
+    display: block;
+    position: relative;
+    opacity: 1;
+}
+
+/* 改進頁籤樣式 */
+.tech-tabs {
+    position: relative;
+    z-index: 10;
+}
+
+.tech-tabs .nav-link {
+    background-color: rgba(6, 28, 56, 0.5);
+    border: none;
+    color: var(--text-color);
+    margin-right: 5px;
+    padding: 10px 20px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.tech-tabs .nav-link.active {
+    background: linear-gradient(45deg, rgba(0, 229, 255, 0.2), rgba(0, 255, 157, 0.2));
+    color: var(--accent-blue);
+    border: none;
+    border-bottom: 2px solid var(--accent-blue);
+}
+
+/* 禁用頁籤樣式 */
+.tech-tabs .nav-link[disabled] {
+    color: rgba(255, 255, 255, 0.4);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* 禁用頁籤但有動態提示 */
+.tech-tabs .nav-link[disabled]:hover::after {
+    content: "完成前一步後解鎖";
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 229, 255, 0.9);
+    color: #000;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.tech-tabs .nav-link[disabled]:hover::after {
+    opacity: 1;
+}
+
+/* 進度條美化 */
+.tech-progress {
+    height: 10px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 15px 0;
+    border: 1px solid rgba(0, 229, 255, 0.5);
+    position: relative;
+}
+
+.tech-progress .progress-bar {
+    background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+    box-shadow: 0 0 10px var(--accent-blue-glow);
+    transition: width 0.5s ease;
+}
+
+/* iPad專用導航樣式優化 */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .tech-tabs .nav-link {
+        padding: 12px 20px;
+        font-size: 16px;
+        min-height: 50px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .tab-content {
+        min-height: calc(100vh - 300px);
+    }
+}
+
+/* 修正頁籤內容滾動問題 */
+.scroll-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.single-tab-content {
+    position: relative;
+    width: 100%;
+    height: auto;
+    max-height: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch; /* 為iOS提供流暢滾動 */
+    padding-bottom: 40px;
+}
+
+.tab-content > .tab-pane {
+    display: none;
+    position: relative;
+    width: 100%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.tab-content > .active {
+    display: block;
+    position: relative;
+    opacity: 1;
+}
+
+/* 確保頁籤內容區域高度合適，不會觸發整頁滾動 */
+.tab-content {
+    position: relative;
+    min-height: 300px;
+    height: auto;
+    overflow: visible;
+}
+
+/* 防止滾動溢出 */
+.tab-pane {
+    position: relative;
+    width: 100%;
+}
+
+/* iPad專用滾動優化 */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .single-tab-content {
+        padding-right: 5px;
+    }
+    
+    .single-tab-content::-webkit-scrollbar {
+        width: 5px;
+    }
+    
+    .single-tab-content::-webkit-scrollbar-thumb {
+        background: rgba(0, 229, 255, 0.5);
+        border-radius: 3px;
+    }
+}
+
+/* 修復頁籤切換問題 - 重寫更徹底的版本 */
+.tab-content {
+    position: relative;
+    height: auto;
+    min-height: 300px;
+    overflow: visible;
+}
+
+.tab-content > .tab-pane {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+}
+
+.tab-content > .active {
+    display: block;
+    position: relative;
+    opacity: 1;
+    z-index: 2;
+}
+
+/* 確保頁籤內容區域有正確的滾動行為 */
+.single-tab-content {
+    position: relative;
+    width: 100%;
+    height: auto;
+    max-height: none;
+    padding-bottom: 40px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch; /* 為iOS提供流暢滾動 */
+    transform: translate3d(0,0,0); /* 強制GPU加速以提高滾動性能 */
+}
+
+/* iPad專用滾動優化 */
+.ipad-device .single-tab-content {
+    max-height: calc(100vh - 300px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0;
+    padding-right: 10px;
+}
+
+.ipad-device .single-tab-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.ipad-device .single-tab-content::-webkit-scrollbar-thumb {
+    background: rgba(0, 229, 255, 0.5);
+    border-radius: 3px;
+}
+
+/* 防止iOS橡皮筋效果干擾整頁滾動 */
+.ipad-device {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.ipad-device .dashboard-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* 改進頁籤樣式，提高觸控區域 */
+.tech-tabs .nav-link {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+    user-select: none;
+}
+
+/* 觸控友好的表格滾動 */
+.table-responsive {
+    -webkit-overflow-scrolling: touch;
+    transform: translate3d(0,0,0); /* GPU加速 */
+}
+
+/* 方向變化動畫調整 */
+.orientation-change {
+    transition: none !important; /* 在旋轉期間禁用所有過渡動畫 */
+}
+
+/* 禁用懸浮效果，使用活躍狀態響應觸控 */
+@media (pointer: coarse) {
+    /* 觸控設備使用活躍狀態替代懸浮效果 */
+    a:hover, button:hover, .btn:hover, .nav-link:hover {
+        background-color: inherit;
+        color: inherit;
+    }
+    
+    a:active, button:active, .btn:active, .nav-link:active {
+        transform: scale(0.98);
+        transition: transform 0.1s ease;
+    }
+    
+    /* 增加觸控目標大小 */
+    .btn, .form-control, .nav-link, select, input[type="checkbox"], input[type="radio"] {
+        min-height: 44px; /* Apple建議的最小觸控區域大小 */
+    }
+    
+    input[type="checkbox"], input[type="radio"] {
+        width: 22px;
+        height: 22px;
+    }
+}
+
+/* iPad Pro 特有優化 */
+@media only screen 
+  and (min-width: 1024px) 
+  and (max-height: 1366px) 
+  and (-webkit-min-device-pixel-ratio: 1.5) {
+    .tech-tabs .nav-link {
+        padding: 15px 25px;
+        font-size: 17px;
+    }
+    
+    .btn {
+        padding: 12px 20px;
+    }
+    
+    .panel {
+        padding: 25px;
+    }
+}
+
+/* iPad專用樣式 - 通用 */
+.ipad-device {
+    /* iPad通用優化 */
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    touch-action: manipulation;
+}
+
+.ipad-device button,
+.ipad-device .form-control,
+.ipad-device .nav-link,
+.ipad-device select,
+.ipad-device input[type="checkbox"],
+.ipad-device input[type="radio"] {
+    min-height: 44px; /* Apple觸控指南建議的最小高度 */
+    margin-bottom: 8px; /* 增加間距以避免意外點擊 */
+}
+
+/* iPad橫向模式特定樣式 */
+.ipad-landscape .dashboard-grid {
+    display: grid;
+    /* 四欄布局以利用橫向螢幕 */
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 15px;
+}
+
+.ipad-landscape .panel[style*="grid-column: span 3"] {
+    grid-column: span 4 !important;
+}
+
+.ipad-landscape .chart-container {
+    height: 380px !important; /* 橫向模式更大的圖表 */
+}
+
+/* 橫向模式的表格優化 */
+.ipad-landscape .tech-table {
+    margin-bottom: 15px;
+    font-size: 15px;
+}
+
+.ipad-landscape .tech-table td,
+.ipad-landscape .tech-table th {
+    padding: 12px 8px;
+}
+
+/* 橫向模式標題優化 */
+.ipad-landscape h1 {
+    font-size: 26px;
+}
+
+.ipad-landscape h2 {
+    font-size: 24px;
+}
+
+.ipad-landscape .header {
+    padding: 10px 0;
+}
+
+/* 優化橫向模式下的圖表佈局 - 兩列排列 */
+.ipad-landscape .charts-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.ipad-landscape .charts-row .chart-container {
+    margin-bottom: 0;
+    width: 100%;
+}
+
+/* iPad縱向模式特定樣式 */
+.ipad-portrait .dashboard-grid {
+    display: grid;
+    /* 兩欄布局以適應縱向螢幕 */
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 10px;
+}
+
+.ipad-portrait .panel[style*="grid-column: span 3"] {
+    grid-column: span 2 !important;
+}
+
+.ipad-portrait .chart-container {
+    height: 320px !important; /* 縱向模式適中的圖表 */
+}
+
+/* 縱向模式更緊湊的UI */
+.ipad-portrait .tech-card {
+    margin-bottom: 12px;
+}
+
+.ipad-portrait h1 {
+    font-size: 22px;
+}
+
+.ipad-portrait h2 {
+    font-size: 20px;
+}
+
+.ipad-portrait .header {
+    padding: 8px 0;
+}
+
+.ipad-portrait .tech-card-header {
+    padding: 10px 15px;
+}
+
+/* 確保頁籤在iPad上可以正確切換 */
+.ipad-device .tab-content > .tab-pane {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    opacity: 0;
+    transition: none; /* 關閉過渡效果以避免問題 */
+}
+
+.ipad-device .tab-content > .active {
+    display: block;
+    position: relative;
+    opacity: 1;
+    z-index: 10;
+}
+
+.ipad-device .tab-content {
+    position: relative;
+    height: auto;
+    overflow: visible;
+}
+
+/* 改進頁籤內容區域滾動處理 */
+.ipad-device .single-tab-content {
+    height: auto;
+    max-height: none; /* 不設上限高度，避免滾動問題 */
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch; 
+    padding-bottom: 50px;
+}
+
+/* 修復圖表在橫向模式下的寬度問題 */
+@media (orientation: landscape) {
+    .ipad-landscape canvas {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+    
+    /* 確保表單元素在橫向模式下不會過寬 */
+    .ipad-landscape .form-control,
+    .ipad-landscape .form-select {
+        max-width: calc(100% - 5px);
+    }
+}
+
+/* iPad Pro 12.9英寸特定優化 */
+@media only screen and (min-width: 1024px) and (max-height: 1366px) and (-webkit-min-device-pixel-ratio: 2) {
+    .ipad-landscape .dashboard-container {
+        max-width: 95%;
+        margin: 0 auto;
+        padding: 15px;
+    }
+    
+    .ipad-landscape .dashboard-grid {
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 20px;
+    }
+    
+    .ipad-landscape .chart-container {
+        height: 420px !important;
+    }
+    
+    .ipad-landscape .tech-tabs .nav-link {
+        font-size: 17px;
+        padding: 12px 25px;
+    }
+}
+
+/* 修復iPhone和iPad設備上的固定元素問題 */
+@supports (-webkit-touch-callout: none) {
+    .dashboard-container {
+        padding-bottom: 70px; /* 避免底部元素被Safari界面遮擋 */
+    }
+    
+    .tab-content {
+        padding-bottom: 30px;
+    }
+}
+
+/* 特別處理iOS上的事件冒泡問題 */
+.ipad-device .nav-link,
+.ipad-device button,
+.ipad-device a {
+    cursor: pointer;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* 確保計算按鈕在各種設備尺寸下都很突出 */
+.ipad-device .btn-tech-action {
+    width: 100% !important;
+    max-width: 300px;
+    margin: 0 auto;
+    display: block;
+}
+
+/* 防止iOS橡皮筋效果 */
+.ipad-device .tab-content {
+    -webkit-overflow-scrolling: touch;
+    backface-visibility: hidden;
+}
+
+/* 平板適配方向變化的改進動畫效果 */
+.orientation-animation {
+    transition: opacity 0.3s ease;
+}
+
+/* 增強iOS設備上的觸控體驗 */
+/* 這些樣式與ios-touch-fixes.js配合，提供最佳的iOS/iPad體驗 */
+.ios-device {
+    -webkit-overflow-scrolling: touch;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.ios-device button,
+.ios-device .btn,
+.ios-device .nav-link,
+.ios-device .form-check-label {
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}
+
+.ios-device .nav-tabs .nav-link {
+    min-height: 44px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+}
+
+.ios-device .single-tab-content {
+    padding-bottom: 50px; /* 確保底部內容可見 */
+    transform: translate3d(0,0,0); /* 強制硬件加速 */
+}
+
+/* 解決iOS滾動時的閃爍問題 */
+.ios-device .tab-content,
+.ios-device .single-tab-content,
+.ios-device .dashboard-container {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+}
+
+/* iOS 安全區域適配 */
+@supports (padding: env(safe-area-inset-bottom)) {
+    .ios-device .dashboard-container {
+        padding-bottom: env(safe-area-inset-bottom);
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+    }
+}
+
+/* iPad 特別優化 */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .ipad-device .tech-tabs .nav-link {
+        padding: 15px 25px;
+        font-size: 16px;
+        min-height: 50px;
+    }
+    
+    /* iPad上按鈕觸摸狀態優化 */
+    .ipad-device .btn:active,
+    .ipad-device .nav-link:active {
+        transform: scale(0.97);
+        opacity: 0.8;
+        transition: transform 0.1s ease, opacity 0.1s ease;
+    }
+    
+    /* iPad上表格操作優化 */
+    .ipad-device .table td,
+    .ipad-device .table th {
+        padding: 15px 10px;
+    }
+}
+
+/* iPad橫屏優化 */
+@media (min-width: 768px) and (orientation: landscape) {
+    .ios-landscape .dashboard-grid {
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 15px;
+    }
+    
+    .ios-landscape .chart-container {
+        height: 380px;
+    }
+}
+
+/* iPad縱屏優化 */
+@media (min-width: 768px) and (orientation: portrait) {
+    .ios-portrait .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 12px;
+    }
+    
+    .ios-portrait .chart-container {
+        height: 320px;
+    }
+    
+    .ios-portrait .panel {
+        padding: 15px;
+    }
+}
+
+/* 解決頁籤切換時的布局跳動 */
+.tab-content {
+    min-height: 400px; /* 確保最小高度一致 */
+}
+
+.tab-content > .tab-pane {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.tab-content > .tab-pane.active {
+    display: block;
+    opacity: 1;
+}
+
+/* 鍵盤開啟時的布局調整 */
+.ios-keyboard-open .floating-panel,
+.ios-keyboard-open .fixed-bottom {
+    display: none !important;
+}
+
+/* 避免頁面在鍵盤開啟時的跳動 */
+.ios-keyboard-open {
+    height: 100% !important;
+    position: fixed;
+    width: 100%;
+}
+
+/* 當在Safari中滾動到頂部或底部時的彈性滾動調整 */
+.ios-device .dashboard-container,
+.ios-device .single-tab-content {
+    overscroll-behavior: none;
 }

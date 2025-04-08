@@ -40,6 +40,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.0/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <!-- 增加iOS觸控修復腳本 -->
+    <script src="ios-touch-fixes.js"></script>
     <style>
         /* iPad 專用樣式調整 */
         @media (min-width: 768px) and (max-width: 1024px) {
@@ -282,6 +284,26 @@
             50% { transform: translate(-50%, -50%) scale(1.05); }
             100% { transform: translate(-50%, -50%) scale(1); }
         }
+
+        /* 修復頁籤切換問題 */
+        .tab-content > .tab-pane {
+            display: none;
+        }
+        
+        .tab-content > .active {
+            display: block;
+        }
+        
+        /* 確保內容區域填滿整個視窗 */
+        .tab-content {
+            min-height: calc(100vh - 270px);
+        }
+        
+        /* 頁籤內容獨立顯示，不要疊加在一起 */
+        .tab-pane {
+            position: relative;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -386,9 +408,9 @@
                 <div class="tech-frame bottom-right"></div>
                 <div class="shimmer-effect"></div>
                 
-                <div class="tab-content" id="analysisTabContent">
+                <div class="tab-content scroll-container" id="analysisTabContent">
                     <!-- 步驟1: 輸入保單參數 -->
-                    <div class="tab-pane fade show active animate__animated animate__fadeIn" id="input" role="tabpanel" aria-labelledby="input-tab">
+                    <div class="tab-pane fade show active animate__animated animate__fadeIn single-tab-content" id="input" role="tabpanel" aria-labelledby="input-tab">
                         <!-- 高級分析選項區域 -->
                         <div class="row mb-4 animate__animated animate__fadeInUp" style="animation-delay: 0.05s">
                             <div class="col-12">
@@ -1419,6 +1441,25 @@
                     splashScreen.style.display = 'none';
                 }, 500);
             }, 2500);
+            
+            // 禁用滾輪頁籤切換行為
+            document.querySelectorAll('.single-tab-content').forEach(tabContent => {
+                tabContent.addEventListener('wheel', function(e) {
+                    e.stopPropagation();
+                });
+                
+                // 防止iOS橡皮筋效果
+                tabContent.addEventListener('touchmove', function(e) {
+                    const scrollTop = this.scrollTop;
+                    const scrollHeight = this.scrollHeight;
+                    const height = this.clientHeight;
+                    
+                    if ((scrollTop <= 0 && e.touches[0].clientY > 0) || 
+                        (scrollTop + height >= scrollHeight && e.touches[0].clientY < 0)) {
+                        e.preventDefault();
+                    }
+                }, { passive: false });
+            });
         });
         
         // 註冊Service Worker
@@ -1529,20 +1570,22 @@
 
         // 確保頁籤正確初始化和切換
         document.addEventListener('DOMContentLoaded', function() {
-            // 移除頁籤的disabled屬性，確保可以點擊
-            document.querySelectorAll('#analysisTab .nav-link').forEach(tab => {
-                tab.removeAttribute('disabled');
-            });
-            
-            // 初始化頁籤
+            // 完全重寫頁籤事件，不依賴Bootstrap自動初始化
             const tabList = document.querySelectorAll('#analysisTab .nav-link');
             tabList.forEach(tab => {
                 tab.addEventListener('click', function(e) {
                     e.preventDefault();
+                    e.stopPropagation(); // 阻止事件冒泡
+                    
+                    // 跳過已禁用的頁籤
+                    if (this.hasAttribute('disabled')) {
+                        return false;
+                    }
                     
                     // 移除所有active類
                     tabList.forEach(t => {
                         t.classList.remove('active');
+                        t.setAttribute('aria-selected', 'false');
                         const pane = document.querySelector(t.getAttribute('data-bs-target'));
                         if (pane) {
                             pane.classList.remove('show', 'active');
@@ -1551,42 +1594,91 @@
                     
                     // 設置當前tab為active
                     this.classList.add('active');
+                    this.setAttribute('aria-selected', 'true');
                     const target = document.querySelector(this.getAttribute('data-bs-target'));
                     if (target) {
                         target.classList.add('show', 'active');
+                        
+                        // 滾動到頂部，但不改變頁籤
+                        setTimeout(() => {
+                            if (target.scrollTo) {
+                                target.scrollTo(0, 0);
+                            } else {
+                                target.scrollTop = 0;
+                            }
+                        }, 10);
                     }
                     
                     // 更新進度條
                     const tabId = this.id.replace('-tab', '');
                     updateProgressBar(tabId);
                     
-                    // 防止頁面滾動到頂部
                     return false;
                 });
             });
             
-            // 其他初始化代碼...
-            // ...existing code...
+            // 修復iPad頁籤觸控問題
+            if (/iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
+                // 停止任何可能發生冒泡的點擊事件
+                document.querySelectorAll('.nav-tabs .nav-link, .nav-pills .nav-link').forEach(link => {
+                    link.addEventListener('touchend', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.click(); // 手動觸發點擊
+                    }, {passive: false});
+                });
+                
+                // 防止頁籤外觸摸事件引起的滾動問題
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.addEventListener('touchmove', function(e) {
+                        // 允許子元素內部滾動
+                        if (!e.target.closest('.single-tab-content, .chart-container, table')) {
+                            e.preventDefault();
+                        }
+                    }, {passive: false});
+                });
+            }
         });
         
-        // 頁籤切換函數 - 增強版
+        // 自定義頁籤切換函數 - 完全重寫以避免依賴Bootstrap
         function switchTab(tabId) {
             // 獲取對應的頁籤元素
             const tabElement = document.getElementById(`${tabId}-tab`);
             
-            if (tabElement) {
-                // 手動觸發點擊事件
-                tabElement.click();
+            if (tabElement && !tabElement.hasAttribute('disabled')) {
+                // 直接調用點擊事件處理函數
+                const clickEvent = new MouseEvent('click', {
+                    bubbles: false,
+                    cancelable: true
+                });
+                tabElement.dispatchEvent(clickEvent);
                 
                 // 平滑滾動到頂部
-                setTimeout(() => {
-                    window.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'
-                    });
-                }, 100);
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
             }
         }
+
+        // 在頁面載入完成後重新應用iOS修復
+        document.addEventListener('DOMContentLoaded', function() {
+            // 檢查是否為iOS設備
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+                        
+            if (isIOS && window.iOSTouchFixes) {
+                // 將所有內容區塊標記為允許滾動
+                document.querySelectorAll('.single-tab-content, .tab-pane').forEach(el => {
+                    el.classList.add('allow-scroll');
+                });
+                
+                // 應用iOS觸控修復
+                setTimeout(() => {
+                    window.iOSTouchFixes.reapply();
+                }, 300);
+            }
+        });
     </script>
 </body>
 </html>
