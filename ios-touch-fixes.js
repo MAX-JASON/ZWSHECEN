@@ -1,349 +1,158 @@
-/**
- * iOS Touch Fixes - 專門用於修復 iOS 設備上的觸控和滾動問題
- * 版本 : 2.0.0 - iPad 優化版本
- */
-
-(function() {
-    'use strict';
-    
-    // 設備檢測 - 優化版本確保能識別新款 iPad
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
-                 (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    
+// iPad 专用触摸优化
+document.addEventListener('DOMContentLoaded', function() {
+    // 检测是否为 iPad
     const isIPad = /iPad/.test(navigator.userAgent) || 
-                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-                  
-    if (!isIOS) return; // 只在 iOS 設備上執行
+                  (/Macintosh/i.test(navigator.platform) && navigator.maxTouchPoints > 1);
     
-    console.log('iOS Touch Fixes 2.0 啟動中 - iPad 優化版本 ');
-    document.documentElement.classList.add('ios-device');
-    if (isIPad) document.documentElement.classList.add('ipad-device');
-    
-    // 強化版 - 修復 iOS 滾動和觸控問題
-    function fixIOSOverscroll() {
-        console.log(' 正在優化 iPad 滾動體驗 ...');
-        
-        // 檢查並開啟所有可滾動容器的觸控滾動功能
-        const scrollContainers = document.querySelectorAll('.single-tab-content, .tab-pane, .dashboard-container, .tab-content');
-        console.log(' 找到 ' + scrollContainers.length + ' 個可滾動容器 ');
-        
-        scrollContainers.forEach(container => {
-            // 啟用慣性滾動
-            container.style.WebkitOverflowScrolling = 'touch';
-            container.style.overflowY = 'auto';
-            container.style.overflowX = 'hidden';
-            
-            // 防止橡皮筋效果，但允許正常滾動
-            container.addEventListener('touchmove', function(e) {
-                const scrollTop = this.scrollTop;
-                const scrollHeight = this.scrollHeight;
-                const height = this.clientHeight;
-                
-                if ((scrollTop <= 0 && e.touches[0].pageY > e.touches[0].screenY) ||
-                    (scrollTop + height >= scrollHeight && e.touches[0].pageY < e.touches[0].screenY)) {
-                    // 防止過度滾動
-                    e.preventDefault();
-                }
-            }, { passive: false });
-        });
-        
-        // 阻止整體頁面滾動，只允許內部容器滾動
-        document.addEventListener('touchmove', function(e) {
-            // 檢查是否在滾動容器內
-            if (e.target.closest('.single-tab-content, .tab-pane, .dashboard-container, [class*="scroll"], form, .form-control')) {
-                return; // 允許容器內滾動
-            }
-            
-            // 阻止整頁滾動
-            if (e.touches.length === 1) {
-                e.preventDefault();
-            }
-        }, { passive: false });
-        
-        // 解決 iOS 頁面過度滾動問題
-        document.body.style.position = 'fixed';
-        document.body.style.width = '100%';
-        document.body.style.height = '100%';
-        document.body.style.overflowY = 'hidden';
-        
-        const container = document.querySelector('.dashboard-container');
-        if (container) {
-            container.style.position = 'absolute';
-            container.style.top = '0';
-            container.style.left = '0';
-            container.style.right = '0';
-            container.style.bottom = '0';
-            container.style.overflowY = 'auto';
-            container.style.WebkitOverflowScrolling = 'touch';
-            container.style.paddingBottom = '40px';
-        }
-    }
+    if (!isIPad) return;
 
-    // 完全修復頁籤切換問題 - 增強版
-    function fixIOSTabSwitching() {
-        console.log(' 正在修復 iPad 頁籤切換功能 ...');
-        // 確保只執行一次
-        if (window._iosTabFixApplied) return;
-        window._iosTabFixApplied = true;
+    console.log(' 应用 iPad 专用触摸优化 ');
+
+    // 为所有按钮添加触摸反馈
+    document.querySelectorAll('button, a, [role="button"]').forEach(btn => {
+        // 确保最小触摸区域为 44x44px
+        btn.style.minWidth = '44px';
+        btn.style.minHeight = '44px';
+        btn.style.padding = '12px 16px';
         
-        // 選擇所有頁籤元素
-        const tabLinks = document.querySelectorAll('.nav-tabs .nav-link, .nav-pills .nav-link');
-        console.log(' 找到 ' + tabLinks.length + ' 個頁籤 ');
-        
-        // 完全移除原有的點擊事件，確保不會有事件冒泡問題
-        tabLinks.forEach(link => {
-            const clone = link.cloneNode(true);
-            link.parentNode.replaceChild(clone, link);
-            
-            // 為新元素添加自定義點擊處理
-            clone.addEventListener('click', handleTabClick);
-            
-            // 同時處理觸摸事件，確保在 iOS 上工作正常
-            clone.addEventListener('touchend', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                setTimeout(() => {
-                    handleTabClick.call(this, e);
-                }, 10);
-            }, { passive: false });
+        // 添加触摸反馈效果
+        btn.addEventListener('touchstart', function() {
+            this.classList.add('ios-active');
         });
         
-        function handleTabClick(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            // 檢查是否已禁用
-            if (this.hasAttribute('disabled') || this.classList.contains('disabled')) {
-                return false;
-            }
-            
-            // 獲取目標頁籤
-            const targetId = this.getAttribute('data-bs-target') || this.getAttribute('href');
-            if (!targetId) return false;
-            
-            const targetPane = document.querySelector(targetId);
-            if (!targetPane) return false;
-            
-            console.log(' 切換到頁籤 : ' + targetId);
-            
-            // 更新頁籤狀態
-            document.querySelectorAll('.nav-tabs .nav-link, .nav-pills .nav-link').forEach(tab => {
-                tab.classList.remove('active');
-                tab.setAttribute('aria-selected', 'false');
-            });
-            
-            this.classList.add('active');
-            this.setAttribute('aria-selected', 'true');
-            
-            // 更新頁籤內容
-            document.querySelectorAll('.tab-pane').forEach(pane => {
-                pane.classList.remove('show', 'active');
-            });
-            
-            targetPane.classList.add('show', 'active');
-            
-            // 重置滾動位置
-            setTimeout(() => {
-                targetPane.scrollTop = 0;
-                const container = document.querySelector('.dashboard-container');
-                if (container) container.scrollTop = 0;
-                
-                // 更新進度條 - 如果存在進度條函數
-                const tabId = targetId.replace('#', '');
-                if (typeof window.updateProgressBar === 'function') {
-                    window.updateProgressBar(tabId);
-                }
-            }, 50);
-            
-            return false;
+        btn.addEventListener('touchend', function() {
+            this.classList.remove('ios-active');
+        });
+    });
+
+    // 为表单元素增加触摸区域
+    document.querySelectorAll('input, select, textarea').forEach(input => {
+        input.style.minHeight = '44px';
+        input.style.padding = '12px';
+    });
+
+    // 防止双击缩放
+    let lastTouchTime = 0;
+    document.addEventListener('touchend', function(event) {
+        const now = Date.now();
+        if (now - lastTouchTime <= 300) {
+            event.preventDefault();
         }
-    }
-    
-    // 完全重置和修復點擊事件
-    function fixIOSTapDelay() {
-        // 添加必要的 CSS 來禁用延遲
-        document.head.insertAdjacentHTML('beforeend', `
-            <style>
-                .ios-device * {
-                    -webkit-touch-callout: none;
-                    -webkit-tap-highlight-color: transparent;
-                    touch-action: manipulation;
-                }
-                
-                .ios-device button,
-                .ios-device .btn,
-                .ios-device a,
-                .ios-device .nav-link,
-                .ios-device [role="button"] {
-                    min-height: 44px; /* Apple 推薦的最小觸控區域 */
-                    cursor: pointer;
-                    user-select: none;
-                }
-                
-                /* 視覺回饋 */
-                .ios-active {
-                    transform: scale(0.97);
-                    opacity: 0.8;
-                    transition: transform 0.1s ease, opacity 0.1s ease;
-                }
-            </style>
-        `);
-        
-        // 修復交互元素的點擊延遲
-        const interactiveEls = document.querySelectorAll(
-            'button, .btn, a, .nav-link, [role="button"], .form-check-label, .clickable'
-        );
-        
-        interactiveEls.forEach(el => {
-            // 避免重複綁定
-            if (el._tapFixed) return;
-            el._tapFixed = true;
-            
-            // 移除舊的事件綁定
-            const clone = el.cloneNode(true);
-            el.parentNode.replaceChild(clone, el);
-            const newEl = clone;
-            
-            // 添加視覺回饋
-            newEl.addEventListener('touchstart', function(e) {
-                this.classList.add('ios-active');
-            }, { passive: true });
-            
-            newEl.addEventListener('touchend', function(e) {
-                this.classList.remove('ios-active');
-                
-                // 對於特定元素，如果是頁籤，讓點擊處理延遲一下，等待視覺回饋
-                if (this.classList.contains('nav-link')) {
-                    setTimeout(() => {
-                        if (typeof this.click === 'function') {
-                            this.click();
-                        }
-                    }, 50);
-                }
-            }, { passive: true });
-            
-            newEl.addEventListener('touchcancel', function() {
-                this.classList.remove('ios-active');
-            }, { passive: true });
-        });
-    }
-    
-    // 完全修復方向變化處理
+        lastTouchTime = now;
+    }, { passive: false });
+
+    // 改善滚动体验
+    document.querySelectorAll('.scrollable').forEach(el => {
+        el.style.webkitOverflowScrolling = 'touch';
+    });
+
+    // 修复点击延迟
+    document.addEventListener('touchstart', function() {}, { passive: true });
+
+    // 方向变化处理
     function handleOrientationChange() {
-        // 監聽方向變化
-        window.addEventListener('orientationchange', function() {
-            console.log(' 設備方向變化 : ' + window.orientation);
-            
-            // 添加轉場效果，防止閃爍
-            document.body.classList.add('orientation-changing');
-            
-            // 延遲處理方向變化
-            setTimeout(() => {
-                updateLayoutForOrientation();
-                resetScrollPositions();
-                
-                // 延遲移除轉場效果
-                setTimeout(() => {
-                    document.body.classList.remove('orientation-changing');
-                }, 300);
-            }, 300);
-        });
-        
-        // 初始化
-        updateLayoutForOrientation();
-    }
-    
-    // 根據方向更新布局
-    function updateLayoutForOrientation() {
         const isLandscape = window.innerWidth > window.innerHeight;
-        
-        // 切換方向類
         document.body.classList.toggle('ios-landscape', isLandscape);
         document.body.classList.toggle('ios-portrait', !isLandscape);
         
-        // 更新主要容器布局
-        const dashboardGrids = document.querySelectorAll('.dashboard-grid');
-        
-        dashboardGrids.forEach(grid => {
-            if (isLandscape) {
-                grid.style.display = 'grid';
-                grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
-                grid.style.gridGap = '15px';
-            } else {
-                grid.style.display = 'grid';
-                grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
-                grid.style.gridGap = '10px';
-            }
-        });
-        
-        // 更新圖表大小
-        const chartContainers = document.querySelectorAll('.chart-container');
-        chartContainers.forEach(container => {
-            container.style.height = isLandscape ? '380px' : '320px';
-        });
-        
-        // 確保圖表重繪
-        setTimeout(function() {
-            if (window.Chart) {
-                try {
-                    const charts = Object.values(Chart.instances || {});
-                    charts.forEach(chart => {
-                        try { 
-                            chart.resize();
-                            chart.render(); 
-                        } catch(e) { 
-                            console.warn(' 無法重繪圖表 :', e); 
-                        }
-                    });
-                } catch(e) {
-                    console.warn(' 圖表重繪失敗 :', e);
-                }
-            }
-        }, 500);
+        // 调整布局
+        adjustLayoutForOrientation(isLandscape);
     }
+
+    // 初始方向检查
+    handleOrientationChange();
     
-    // 重置滾動位置
-    function resetScrollPositions() {
-        // 重置各種可滾動容器
-        const scrollables = document.querySelectorAll('.single-tab-content, .tab-pane, .dashboard-container');
-        scrollables.forEach(el => el.scrollTop = 0);
-    }
-    
-    // 公共接口
-    window.iOSTouchFixes = {
-        version: '2.0.0',
-        isIOS: isIOS,
-        isIPad: isIPad,
-        
-        // 強制重新應用所有修復
-        reapply: function() {
-            fixIOSOverscroll();
-            fixIOSTabSwitching();
-            fixIOSTapDelay();
-            handleOrientationChange();
-            console.log('iOS Touch Fixes 已重新應用 ');
-        },
-        
-        // 更新布局
-        updateLayout: updateLayoutForOrientation,
-        
-        // 重置滾動位置
-        resetScroll: resetScrollPositions
-    };
-    
-    // 頁面加載完成後執行所有修復
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM 已加載，正在應用 iOS 修復 ...');
-        
-        // 立即應用修復
-        fixIOSOverscroll();
-        fixIOSTapDelay();
-        
-        // 延遲應用更複雜的修復，確保 DOM 完全加載
-        setTimeout(function() {
-            fixIOSTabSwitching();
-            handleOrientationChange();
-            console.log(' 所有 iOS 修復已完成應用 ');
-        }, 100);
+    // 监听方向变化
+    window.addEventListener('resize', function() {
+        setTimeout(handleOrientationChange, 300);
     });
-})();
+
+    // 布局调整函数
+    function adjustLayoutForOrientation(isLandscape) {
+        const container = document.querySelector('.dashboard-container');
+        const advancedCards = document.querySelectorAll('.tech-card-advanced');
+        
+        if (container) {
+            if (isLandscape) {
+                container.style.padding = '20px';
+                container.style.gridGap = '20px';
+            } else {
+                container.style.padding = '15px';
+                container.style.gridGap = '15px';
+            }
+        }
+
+        // 高级分析选项处理
+        advancedCards.forEach(card => {
+            card.style.display = 'block'; // 确保始终显示
+            if (isLandscape) {
+                card.style.width = 'calc(50% - 20px)';
+                card.style.margin = '0 auto 20px';
+            } else {
+                card.style.width = '100%';
+                card.style.margin = '0 0 20px';
+            }
+        });
+    }
+
+    // 确保高级分析选项可见
+    document.querySelectorAll('.tech-card-advanced').forEach(card => {
+        card.style.display = 'block';
+        card.style.opacity = '1';
+        card.style.transition = 'opacity 0.3s ease';
+    });
+});
+
+// 添加 CSS 类用于触摸反馈和 iPad 优化
+const style = document.createElement('style');
+style.textContent = `
+.ios-active {
+    transform: scale(0.96);
+    opacity: 0.9;
+    transition: transform 0.1s ease, opacity 0.1s ease;
+}
+
+.ios-landscape .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+}
+
+.ios-portrait .dashboard-grid {
+    grid-template-columns: 1fr !important;
+}
+
+/* 高级分析选项优化 */
+.tech-card-advanced {
+    display: block !important;
+    opacity: 1 !important;
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 1024px) {
+    body {
+        -webkit-text-size-adjust: 100%;
+    }
+    
+    .panel {
+        padding: 20px !important;
+        margin-bottom: 20px !important;
+    }
+    
+    .btn-tech {
+        padding: 16px 24px !important;
+        font-size: 18px !important;
+    }
+    
+    /* 高级分析选项在 iPad 上的样式 */
+    .tech-card-advanced {
+        padding: 20px !important;
+        margin: 20px 0 !important;
+        width: 100% !important;
+    }
+    
+    .ios-landscape .tech-card-advanced {
+        width: calc(50% - 20px) !important;
+        margin: 0 auto 20px !important;
+    }
+}
+`;
+document.head.appendChild(style);
