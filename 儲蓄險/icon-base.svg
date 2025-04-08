@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- 背景 -->
+  <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#040b19" />
+    <stop offset="100%" stop-color="#0a2a4a" />
+  </linearGradient>
+  <rect x="0" y="0" width="512" height="512" rx="120" fill="url(#bg-gradient)" />
+  
+  <!-- 外環裝飾 -->
+  <circle cx="256" cy="256" r="210" fill="none" stroke="#00e5ff" stroke-width="5" stroke-dasharray="15,10" />
+  
+  <!-- 螢光路徑 -->
+  <linearGradient id="path-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#00e5ff" />
+    <stop offset="100%" stop-color="#00ff9d" />
+  </linearGradient>
+  
+  <path d="M80,240 L180,240 L220,170 L290,330 L330,240 L430,240" 
+        fill="none" stroke="url(#path-gradient)" stroke-width="12" 
+        stroke-linecap="round" stroke-linejoin="round" />
+        
+  <!-- 中間科技圓環 -->
+  <circle cx="256" cy="256" r="100" fill="none" stroke="#00e5ff" stroke-width="4" />
+  <circle cx="256" cy="256" r="80" fill="none" stroke="#00e5ff" stroke-width="2" stroke-dasharray="5,5" />
+  
+  <!-- 計算器圖示 -->
+  <g transform="translate(206, 206) scale(2.5)">
+    <rect x="0" y="0" width="40" height="40" rx="5" fill="#00e5ff" opacity="0.8" />
+    <rect x="5" y="5" width="30" height="10" rx="2" fill="#ffffff" />
+    <rect x="5" y="20" width="8" height="8" rx="1" fill="#ffffff" />
+    <rect x="16" y="20" width="8" height="8" rx="1" fill="#ffffff" />
+    <rect x="27" y="20" width="8" height="8" rx="1" fill="#ffffff" />
+    <rect x="5" y="31" width="8" height="8" rx="1" fill="#ffffff" />
+    <rect x="16" y="31" width="8" height="8" rx="1" fill="#ffffff" />
+    <rect x="27" y="31" width="8" height="8" rx="1" fill="#ffffff" />
+  </g>
+  
+  <!-- 光暈效果 -->
+  <circle cx="256" cy="256" r="150" fill="url(#bg-gradient)" opacity="0.3" filter="blur(30px)" />
+  <circle cx="256" cy="256" r="80" fill="#00e5ff" opacity="0.2" filter="blur(20px)" />
+</svg>

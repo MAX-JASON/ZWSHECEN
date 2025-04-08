@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#040b19">
+    <title>台灣儲蓄險分析系統</title>
+    
+    <!-- PWA相關連結 -->
+    <link rel="manifest" href="./manifest.json">
+    <link rel="apple-touch-icon" href="./icons/icon-180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+    
+    <!-- 外部樣式表 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <!-- 啟動畫面 -->
+    <div class="splash-screen" id="splashScreen">
+        <div class="splash-logo">
+            <i class="fas fa-calculator"></i>
+        </div>
+        <div class="splash-text">儲蓄險分析系統</div>
+        <div class="splash-loading"></div>
+        <div class="splash-version">v3.0.1</div>
+    </div>
+    
+    <!-- 原有內容 -->
+    <!-- 粒子背景 -->
+    <div id="particles-js"></div>
+    
+    <div class="dashboard-container">
+        <!-- 頭部設計 - 採用2.0TXT風格 -->
+        <div class="header">
+            <div class="logo">⚙ SYSTEM</div>
+            <h1>台灣儲蓄險分析系統 3.0</h1>
+            <div class="datetime" id="current-datetime">2023年04月30日 週日 10:00:00</div>
+            <div class="scan-effect"></div>
+        </div>
+        
+        <!-- 主導航菜單 - 科技風格 -->
+        <div class="dashboard-grid mb-4">
+            <div class="panel" style="grid-column: span 3;">
+                <div class="tech-frame top-left"></div>
+                <div class="tech-frame top-right"></div>
+                <div class="tech-frame bottom-left"></div>
+                <div class="tech-frame bottom-right"></div>
+                <div class="shimmer-effect"></div>
+                
+                <div class="main-nav mb-3">
+                    <div class="row g-2">
+                        <div class="col-md-3">
+                            <button class="btn btn-tech btn-nav active" data-module="basic">
+                                <i class="fas fa-calculator me-2"></i>基本分析
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-tech btn-nav" data-module="retirement">
+                                <i class="fas fa-umbrella-beach me-2"></i>退休規劃
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-tech btn-nav" data-module="portfolio">
+                                <i class="fas fa-chart-pie me-2"></i>資產配置
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-tech btn-nav" data-module="market">
+                                <i class="fas fa-globe me-2"></i>市場數據
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="progress tech-progress">
+                    <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" 
+                        role="progressbar" style="width: 33%;" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100">步驟 1/3</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 頁籤導航 - 科技風格 -->
+        <div class="dashboard-grid mb-4">
+            <div class="panel" style="grid-column: span 3; padding: 10px;">
+                <div class="tech-frame top-left"></div>
+                <div class="tech-frame top-right"></div>
+                <div class="tech-frame bottom-left"></div>
+                <div class="tech-frame bottom-right"></div>
+                
+                <ul class="nav nav-tabs tech-tabs" id="analysisTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="input-tab" data-bs-toggle="tab" data-bs-target="#input" type="button" role="tab" aria-controls="input" aria-selected="true">
+                            <i class="fas fa-pen-to-square me-2"></i>輸入數據
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="comparison-tab" data-bs-toggle="tab" data-bs-target="#comparison" type="button" role="tab" aria-controls="comparison" aria-selected="false" disabled>
+                            <i class="fas fa-table-columns me-2"></i>比較表
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="report-tab" data-bs-toggle="tab" data-bs-target="#report" type="button" role="tab" aria-controls="report" aria-selected="false" disabled>
+                            <i class="fas fa-file-contract me-2"></i>綜合報告
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- 主內容區域 -->
+        <div class="dashboard-grid">
+            <div class="panel" style="grid-column: span 3;">
+                <div class="tech-frame top-left"></div>
+                <div class="tech-frame top-right"></div>
+                <div class="tech-frame bottom-left"></div>
+                <div's="tech-frame bottom-right"></div>
+                <div class="shimmer-effect"></div>
+                
+                <div class="tab-content scroll-container" id="analysisTabContent">
+                    <!-- 步驟1: 輸入保單參數 -->
+                    <div class="tab-pane fade show active animate__animated animate__fadeIn single-tab-content" id="input" role="tabpanel" aria-labelledby="input-tab">
+                        <!-- 高級分析選項區域 -->
+                        <div class="row mb-4 animate__animated animate__fadeInUp" style="animation-delay: 0.05s">
+                            <div class="col-12">
+                                <div class="tech-card tech-card-advanced">
+                                    <div class="card-header tech-card-header">
+                                        <i class="fas fa-sliders-h me-2"></i>高級分析選項
+                                        <button type="button" class="btn btn-sm btn-tech-sm float-end" id="toggleAdvancedOptions">
+                                            <i class="fas fa-chevron-down"></i>
+                                        </button>
+                                    </div>
+                                    <div class="card-body" id="advancedOptionsPanel" style="display: none;">
+                                        <div class="row g-3">
+                                            <!-- 財務分析選項 -->
+                                            <div class="col-md-4">
+                                                <div class="form-check tech-check">
+                                                    <input class="form-check-input" type="checkbox" id="inflationAdjust">
+                                                    <label class="form-check-label tech-bright-text" for="inflationAdjust">
+                                                        <i class="fas fa-chart-line me-1"></i>通膨調整分析
+                                                    </label>
+                                                </div>
+                                                <div class="mt-2" id="inflationPanel" style="display: none;">
+                                                    <label for="inflationRate" class="form-label tech-bright-text">年通膨率 (%)</label>
+                                                    <input type="number" class="form-control tech-input" id="inflationRate" value="2.0" step="0.1">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-check tech-check">
+                                                    <input class="form-check-input" type="checkbox" id="exchangeRiskAnalysis">
+                                                    <label class="form-check-label tech-bright-text" for="exchangeRiskAnalysis">
+                                                        <i class="fas fa-dollar-sign me-1"></i>匯率風險評估
+                                                    </label>
+                                                </div>
+                                                <div class="mt-2" id="exchangeRiskPanel" style="display: none;">
+                                                    <label for="exchangeRateVolatility" class="form-label tech-bright-text">匯率波動率 (%)</label>
+                                                    <input type="number" class="form-control tech-input" id="exchangeRateVolatility" value="5.0" step="0.5">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-check tech-check">
+                                                    <input class="form-check-input" type="checkbox" id="taxAnalysis">
+                                                    <label class="form-check-label tech-bright-text" for="taxAnalysis">
+                                                        <i class="fas fa-receipt me-1"></i>稅務影響分析
+                                                    </label>
+                                                </div>
+                                                <div class="mt-2" id="taxAnalysisPanel" style="display: none;">
+                                                    <label for="taxRate" class="form-label tech-bright-text">綜所稅率 (%)</label>
+                                                    <select class="form-select tech-select" id="taxRate">
+                                                        <option value="5">5% (低所得)</option>
+                                                        <option value="12" selected>12% (中等所得)</option>
+                                                        <option value="20">20% (中高所得)</option>
+                                                        <option value="30">30% (高所得)</option>
+                                                        <option value="40">40% (最高所得)</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <hr class="tech-divider">
+                                        
+                                        <!-- 多功能評估選項 -->
+                                        <div class="row g-3">
+                                            <div class="col-md-4">
+                                                <div class="form-check tech-check">
+                                                    <input class="form-check-input" type="checkbox" id="loanSimulation">
+                                                    <label class="form-check-label tech-bright-text" for="loanSimulation">
+                                                        <i class="fas fa-hand-holding-usd me-1"></i>保單貸款模擬
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-check tech-check">
+                                                    <input class="form-check-input" type="checkbox" id="annuityOption">
+                                                    <label class="form-check-label tech-bright-text" for="annuityOption">
+                                                        <i class="fas fa-coins me-1"></i>年金化選項比較
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-check tech-check">
+                                                    <input class="form-check-input" type="checkbox" id="multiPolicyAnalysis">
+                                                    <label class="form-check-label tech-bright-text" for="multiPolicyAnalysis">
+                                                        <i class="fas fa-layer-group me-1"></i>多保單組合分析
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <hr class="tech-divider">
+                                        
+                                        <!-- 市場數據整合 -->
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <div class="form-check tech-check">
+                                                    <input class="form-check-input" type="checkbox" id="marketAvgComparison">
+                                                    <label class="form-check-label tech-bright-text" for="marketAvgComparison">
+                                                        <i class="fas fa-chart-bar me-1"></i>市場平均數據比較
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-check tech-check">
+                                                    <input class="form-check-input" type="checkbox" id="interestTrend">
+                                                    <label class="form-check-label tech-bright-text" for="interestTrend">
+                                                        <i class="fas fa-chart-line me-1"></i>利率趨勢預測
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-check tech-check">
+                                                    <input class="form-check-input" type="checkbox" id="companyFinancial">
+                                                    <label class="form-check-label tech-bright-text" for="companyFinancial">
+                                                        <i class="fas fa-building-columns me-1"></i>保險公司財務指標
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-check tech-check">
+                                                    <input class="form-check-input" type="checkbox" id="customScoring">
+                                                    <label class="form-check-label tech-bright-text" for="customScoring">
+                                                        <i class="fas fa-star-half-alt me-1"></i>客製化評分體系
+                                                    </label>
+                                                </div>
+                                                <div class="mt-2" id="customScoringPanel" style="display: none;">
+                                                    <div class="row g-2">
+                                                        <div class="col-6">
+                                                            <label class="form-label tech-bright-text">報酬率權重</label>
+                                                            <input type="range" class="form-range" id="returnWeight" min="1" max="10" value="7">
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <label class="form-label tech-bright-text">醫療權重</label>
+                                                            <input type="range" class="form-range" id="medicalWeight" min="1" max="10" value="3">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <hr class="tech-divider">
+                                        
+                                        <!-- 報告與導出選項 -->
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label for="reportTemplate" class="form-label tech-bright-text">報告模板選擇</label>
+                                                <select class="form-select tech-select" id="reportTemplate">
+                                                    <option value="standard" selected>標準分析報告</option>
+                                                    <option value="comprehensive">全面分析報告（含進階指標）</option>
+                                                    <option value="executive">決策者摘要報告</option>
+                                                    <option value="client">客戶友善版報告</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="exportFormat" class="form-label tech-bright-text">資料導出格式</label>
+                                                <select class="form-select tech-select" id="exportFormat">
+                                                    <option value="pdf" selected>PDF報告</option>
+                                                    <option value="excel">Excel試算表</option>
+                                                    <option value="json">JSON資料</option>
+                                                    <option value="api">API整合</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        
+                        <form id="policyForm">
+                            <!-- 保單類型選擇 - 更改預設年期 -->
+                            <div class="row mb-4 animate__animated animate__fadeInUp" style="animation-delay: 0.1s">
+                                <div class="col-md-6">
+                                    <label for="policyTerm" class="form-label tech-bright-text">
+                                        <i class="fas fa-calendar-alt me-1"></i>保單年期
+                                    </label>
+                                    <select class="form-select tech-select" id="policyTerm">
+                                        <option value="1">1年期</option>
+                                        <option value="2">2年期</option>
+                                        <option value="6">6年期</option>
+                                        <option value="8">8年期</option>
+                                        <option value="10">10年期</option>
+                                        <option value="15">15年期</option>
+                                        <option value="20" selected>20年期</option>
+                                        <option value="30">30年期</option>
+                                    </select>
+                                    <div class="tech-slider mt-2">
+                                        <div id="termSelectedValue">選擇：20年</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="currencyType" class="form-label tech-bright-text">
+                                        <i class="fas fa-money-bill-wave me-1"></i>貨幣類型
+                                    </label>
+                                    <select class="form-select tech-select" id="currencyType">
+                                        <option value="TWD">台幣 (TWD)</option>
+                                        <option value="USD">美金 (USD)</option>
+                                    </select>
+                                    <div class="tech-slider mt-2">
+                                        <div id="currencySelectedValue">選擇：台幣 (TWD)</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 醫療險附加功能 - 新增防癌險和長照險選項 -->
+                            <div class="tech-card tech-card-feature mb-4 animate__animated animate__fadeInUp" style="animation-delay: 0.15s">
+                                <div class="card-header tech-card-header">
+                                    <i class="fas fa-hospital me-2"></i>醫療險附加功能
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-check tech-check">
+                                                <input class="form-check-input" type="checkbox" id="criticalIllness">
+                                                <label class="form-check-label tech-bright-text" for="criticalIllness">
+                                                    <i class="fas fa-heartbeat me-1"></i>重大疾病保障
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-check tech-check">
+                                                <input class="form-check-input" type="checkbox" id="hospitalization">
+                                                <label class="form-check-label tech-bright-text" for="hospitalization">
+                                                    <i class="fas fa-procedures me-1"></i>住院醫療給付
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-check tech-check">
+                                                <input class="form-check-input" type="checkbox" id="surgery">
+                                                <label class="form-check-label tech-bright-text" for="surgery">
+                                                    <i class="fas fa-syringe me-1"></i>手術醫療保障
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-check tech-check">
+                                                <input class="form-check-input" type="checkbox" id="cancerProtection">
+                                                <label class="form-check-label tech-bright-text" for="cancerProtection">
+                                                    <i class="fas fa-ribbon me-1"></i>防癌險
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mt-2">
+                                            <div class="form-check tech-check">
+                                                <input class="form-check-input" type="checkbox" id="longTermCare">
+                                                <label class="form-check-label tech-bright-text" for="longTermCare">
+                                                    <i class="fas fa-user-nurse me-1"></i>長照險
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-md-8">
+                                            <label for="medicalCoverage" class="form-label tech-bright-text">醫療保障額度 (<span class="currency-symbol">NT$</span>)</label>
+                                            <input type="number" class="form-control tech-input" id="medicalCoverage" placeholder="例: 100000">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="medicalPremium" class="form-label tech-bright-text">附加醫療保費比例 (%)</label>
+                                            <input type="number" class="form-control tech-input" id="medicalPremium" placeholder="例: 10" min="0" max="100">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 自家保單 - 添加年配息欄位 -->
+                            <div class="tech-card tech-card-primary mb-4 animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
+                                <div class="card-header tech-card-header">
+                                    <i class="fas fa-home me-2"></i>自家保單
+                                </div>
+                                <div class="card-body">
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label for="ownName" class="form-label tech-bright-text">保單名稱</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="fas fa-tag"></i></span>
+                                                <input type="text" class="form-control tech-input" id="ownName" placeholder="請輸入保單名稱" value="自家保單">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="ownPremium" class="form-label tech-bright-text">年繳保費</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control tech-input" id="ownPremium" placeholder="例: 50">
+                                                <span class="input-group-text currency-unit">萬</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="ownRate" class="form-label tech-bright-text">預定利率</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control tech-input" id="ownRate" step="0.1" placeholder="例: 2.1">
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="ownDividend" class="form-label tech-bright-text">年配息金額</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control tech-input" id="ownDividend" step="0.1" placeholder="例: 1.5">
+                                                <span class="input-group-text currency-unit">萬</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="ownSurrender" class="form-label tech-bright-text">期末解約金</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control tech-input" id="ownSurrender" placeholder="例: 315">
+                                                <span class="input-group-text currency-unit">萬</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 新增壽險額度欄位 -->
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <label for="ownLifeInsurance" class="form-label tech-bright-text">壽險額度</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control tech-input" id="ownLifeInsurance" placeholder="例: 500">
+                                                <span class="input-group-text currency-unit">萬</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="ownLifeInsuranceTerm" class="form-label tech-bright-text">壽險保障年限</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control tech-input" id="ownLifeInsuranceTerm" placeholder="例: 20">
+                                                <span class="input-group-text">年</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 競品A卡片 - 添加年配息欄位 -->
+                            <div class="tech-card tech-card-secondary mb-4 animate__animated animate__fadeInUp" style="animation-delay: 0.3s">
+                                <div class="card-header tech-card-header">
+                                    <i class="fas fa-building me-2"></i>競品A
+                                    <span class="badge bg-info ms-2" style="font-size: 0.7rem;">選填項目</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label for="compA-name" class="form-label tech-bright-text">保單名稱</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="fas fa-tag"></i></span>
+                                                <input type="text" class="form-control tech-input" id="compA-name" placeholder="請輸入競品名稱（選填）" value="競品A">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="compA-premium" class="form-label tech-bright-text">年繳保費</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control tech-input" id="compA-premium" placeholder="選填">
+                                                <span class="input-group-text currency-unit">萬</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="compA-rate" class="form-label tech-bright-text">預定利率</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control tech-input" id="compA-rate" step="0.1" placeholder="選填">
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="compA-dividend" class="form-label tech-bright-text">年配息金額</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control tech-input" id="compA-dividend" step="0.1" placeholder="選填">
+                                                <span class="input-group-text currency-unit">萬</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="compA-surrender" class="form-label tech-bright-text">期末解約金</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control tech-input" id="compA-surrender" placeholder="選填">
+                                                <span class="input-group-text currency-unit">萬</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 新增壽險額度欄位 -->
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <label for="compA-lifeInsurance" class="form-label tech-bright-text">壽險額度</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control tech-input" id="compA-lifeInsurance" placeholder="選填">
+                                                <span class="input-group-text currency-unit">萬</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="compA-lifeInsuranceTerm" class="form-label tech-bright-text">壽險保障年限</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control tech-input" id="compA-lifeInsuranceTerm" placeholder="選填">
+                                                <span class="input-group-text">年</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 醫療選項 -->
+                                    <div class="row mt-3">
+                                        <div class="col-md-12">
+                                            <div class="form-check tech-check">
+                                                <input class="form-check-input" type="checkbox" id="compA-medical">
+                                                <label class="form-check-label tech-bright-text" for="compA-medical">
+                                                    <i class="fas fa-hospital-user me-1"></i>包含醫療險功能
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 競品B卡片 - 添加年配息欄位 -->
+                            <div class="tech-card tech-card-secondary mb-4 animate__animated animate__fadeInUp" style="animation-delay: 0.4s">
+                                <div class="card-header tech-card-header">
+                                    <i class="fas fa-building me-2"></i>競品B
+                                    <span class="badge bg-info ms-2" style="font-size: 0.7rem;">選填項目</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label for="compB-name" class="form-label tech-bright-text">保單名稱</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="fas fa-tag"></i></span>
+                                                <input type="text" class="form-control tech-input" id="compB-name" placeholder="請輸入競品名稱（選填）" value="競品B">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="compB-premium" class="form-label tech-bright-text">年繳保費</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control tech-input" id="compB-premium" placeholder="選填">
+                                                <span class="input-group-text currency-unit">萬</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="compB-rate" class="form-label tech-bright-text">預定利率</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control tech-input" id="compB-rate" step="0.1" placeholder="選填">
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="compB-dividend" class="form-label tech-bright-text">年配息金額</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control tech-input" id="compB-dividend" step="0.1" placeholder="選填">
+                                                <span class="input-group-text currency-unit">萬</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="compB-surrender" class="form-label tech-bright-text">期末解約金</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control tech-input" id="compB-surrender" placeholder="選填">
+                                                <span class="input-group-text currency-unit">萬</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 新增壽險額度欄位 -->
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <label for="compB-lifeInsurance" class="form-label tech-bright-text">壽險額度</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control tech-input" id="compB-lifeInsurance" placeholder="選填">
+                                                <span class="input-group-text currency-unit">萬</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="compB-lifeInsuranceTerm" class="form-label tech-bright-text">壽險保障年限</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control tech-input" id="compB-lifeInsuranceTerm" placeholder="選填">
+                                                <span class="input-group-text">年</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 醫療選項 -->
+                                    <div class="row mt-3">
+                                        <div class="col-md-12">
+                                            <div class="form-check tech-check">
+                                                <input class="form-check-input" type="checkbox" id="compB-medical">
+                                                <label class="form-check-label tech-bright-text" for="compB-medical">
+                                                    <i class="fas fa-hospital-user me-1"></i>包含醫療險功能
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 競品C卡片 - 添加年配息欄位 -->
+                            <div class="tech-card tech-card-secondary mb-4 animate__animated animate__fadeInUp" style="animation-delay: 0.5s">
+                                <div class="card-header tech-card-header">
+                                    <i class="fas fa-building me-2"></i>競品C
+                                    <span class="badge bg-info ms-2" style="font-size: 0.7rem;">選填項目</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label for="compC-name" class="form-label tech-bright-text">保單名稱</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="fas fa-tag"></i></span>
+                                                <input type="text" class="form-control tech-input" id="compC-name" placeholder="請輸入競品名稱（選填）" value="競品C">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="compC-premium" class="form-label tech-bright-text">年繳保費</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control tech-input" id="compC-premium" placeholder="選填">
+                                                <span class="input-group-text currency-unit">萬</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="compC-rate" class="form-label tech-bright-text">預定利率</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control tech-input" id="compC-rate" step="0.1" placeholder="選填">
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="compC-dividend" class="form-label tech-bright-text">年配息金額</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control tech-input" id="compC-dividend" step="0.1" placeholder="選填">
+                                                <span class="input-group-text currency-unit">萬</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="compC-surrender" class="form-label tech-bright-text">期末解約金</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control tech-input" id="compC-surrender" placeholder="選填">
+                                                <span class="input-group-text currency-unit">萬</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 新增壽險額度欄位 -->
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <label for="compC-lifeInsurance" class="form-label tech-bright-text">壽險額度</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control tech-input" id="compC-lifeInsurance" placeholder="選填">
+                                                <span class="input-group-text currency-unit">萬</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="compC-lifeInsuranceTerm" class="form-label tech-bright-text">壽險保障年限</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control tech-input" id="compC-lifeInsuranceTerm" placeholder="選填">
+                                                <span class="input-group-text">年</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 醫療選項 -->
+                                    <div class="row mt-3">
+                                        <div class="col-md-12">
+                                            <div class="form-check tech-check">
+                                                <input class="form-check-input" type="checkbox" id="compC-medical">
+                                                <label class="form-check-label tech-bright-text" for="compC-medical">
+                                                    <i class="fas fa-hospital-user me-1"></i>包含醫療險功能
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 計算分析按鈕 - 2.0TXT風格 -->
+                            <div class="panel" style="background-color: rgba(0, 0, 0, 0); border: none; box-shadow: none; padding: 0; margin-top: 30px;">
+                                <button type="button" id="calculateBtn" class="btn btn-tech-action btn-lg d-block mx-auto" style="width: 250px; height: 60px;">
+                                    <div class="tech-frame top-left"></div>
+                                    <div class="tech-frame top-right"></div>
+                                    <div class="tech-frame bottom-left"></div>
+                                    <div class="tech-frame bottom-right"></div>
+                                    <i class="fas fa-calculator me-2"></i>計算分析
+                                    <div class="shimmer-effect"></div>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- 找到計算分析按鈕的區塊，添加特定類名 -->
+                    <div class="row action-button-container">
+                        <div class="col-12 text-center mb-4">
+                            <button id="calculateBtn" class="btn btn-tech-action btn-lg">
+                                <i class="fas fa-calculator me-2"></i> 計算分析
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 步驟2: 比較表 -->
+                    <div class="tab-pane fade animate__animated animate__fadeIn" id="comparison" role="tabpanel" aria-labelledby="comparison-tab">
+                        <h2 class="tech-section-title mb-4">
+                            <i class="fas fa-chart-bar me-2 pulse-icon"></i>保單比較表
+                            <div class="loading-circle top-right"></div>
+                        </h2>
+
+                        <!-- 比較顯示控制面板 - 新增可選擇性顯示市場比較 -->
+                        <div class="tech-card mb-4 animate__animated animate__fadeIn">
+                            <div class="card-header tech-card-header">
+                                <i class="fas fa-sliders-h me-2"></i>比較選項設定
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-check tech-check">
+                                            <input class="form-check-input" type="checkbox" id="showOwnOnly" checked>
+                                            <label class="form-check-label tech-bright-text" for="showOwnOnly">
+                                                <i class="fas fa-home me-1"></i>僅顯示自家保單分析
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check tech-check">
+                                            <input class="form-check-input" type="checkbox" id="showMarketComparison">
+                                            <label class="form-check-label tech-bright-text" for="showMarketComparison">
+                                                <i class="fas fa-chart-line me-1"></i>顯示市場對比分析
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 切換分析內容的標籤 - 新增配息分析頁籤 -->
+                        <ul class="nav nav-pills tech-pills mb-4 animate__animated animate__fadeIn" id="comparisonTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="irr-tab" data-bs-toggle="pill" data-bs-target="#irrAnalysis" type="button" role="tab" aria-controls="irrAnalysis" aria-selected="true">
+                                    <i class="fas fa-percentage me-1"></i>報酬分析
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="dividend-tab" data-bs-toggle="pill" data-bs-target="#dividendAnalysis" type="button" role="tab" aria-controls="dividendAnalysis" aria-selected="false">
+                                    <i class="fas fa-coins me-1"></i>配息分析
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="medical-tab" data-bs-toggle="pill" data-bs-target="#medicalAnalysis" type="button" role="tab" aria-controls="medicalAnalysis" aria-selected="false">
+                                    <i class="fas fa-heartbeat me-1"></i>醫療保障分析
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="comprehensive-tab" data-bs-toggle="pill" data-bs-target="#comprehensiveAnalysis" type="button" role="tab" aria-controls="comprehensiveAnalysis" aria-selected="false">
+                                    <i class="fas fa-balance-scale me-1"></i>綜合評分
+                                </button>
+                            </li>
+                        </ul>
+                        
+                        <div class="tab-content" id="comparisonTabContent">
+                            <!-- 報酬分析內容 -->
+                            <div class="tab-pane fade show active" id="irrAnalysis" role="tabpanel" aria-labelledby="irr-tab">
+                                <div class="row mb-4">
+                                    <div class="col-md-6 animate__animated animate__fadeInLeft" style="animation-delay: 0.2s">
+                                        <div class="panel own-comparison-panel">
+                                            <div class="tech-frame top-left"></div>
+                                            <div class="tech-frame top-right"></div>
+                                            <div class="tech-frame bottom-left"></div>
+                                            <div class="tech-frame bottom-right"></div>
+                                            <div class="panel-title"><i class="fas fa-percentage me-2"></i>年化報酬率分析</div>
+                                            <div class="data-loading"></div>
+                                            
+                                            <table class="table table-striped table-hover tech-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>保單</th>
+                                                        <th>IRR</th>
+                                                        <th>排名</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="irrTable">
+                                                    <!-- 動態生成的IRR比較表 -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 animate__animated animate__fadeInRight" style="animation-delay: 0.2s">
+                                        <div class="panel">
+                                            <div class="tech-frame top-left"></div>
+                                            <div class="tech-frame top-right"></div>
+                                            <div class="tech-frame bottom-left"></div>
+                                            <div class="tech-frame bottom-right"></div>
+                                            <div class="panel-title"><i class="fas fa-chart-column me-2"></i>IRR圖表比較</div>
+                                            <div class="data-loading"></div>
+                                            <div class="chart-container" style="height: 300px;">
+                                                <canvas id="irrChart"></canvas>
+                                                <div class="data-point" style="top: 30%; left: 20%;"></div>
+                                                <div class="data-point" style="top: 40%; left: 65%;"></div>
+                                                <div class="data-point" style="top: 60%; left: 45%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 解約金差異比較表 - 完善表頭和結構 -->
+                                <div class="row mb-4 animate__animated animate__fadeInUp" style="animation-delay: 0.3s">
+                                    <div class="col-md-12">
+                                        <div class="tech-card tech-card-inner glow-border-yellow">
+                                            <div class="card-header tech-card-header">
+                                                <i class="fas fa-coins me-2"></i>解約金差異比較
+                                                <div class="tech-border-glow"></div>
+                                            </div>
+                                            <div class="card-body table-responsive">
+                                                <div class="data-badge">
+                                                    <span id="bestReturnBadge" class="badge bg-success"><i class="fas fa-medal me-1"></i>最高報酬</span>
+                                                </div>
+                                                <table class="table table-striped table-hover tech-table" id="surrenderTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>保單名稱</th>
+                                                            <th>期末解約金</th>
+                                                            <th>與自家保單差異</th>
+                                                            <th>總繳保費</th>
+                                                            <th>總報酬率</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <!-- 動態生成的解約金比較表 -->
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 利率敏感度分析表 - 完善表頭和結構 -->
+                                <div class="row mb-4 animate__animated animate__fadeInUp" style="animation-delay: 0.4s">
+                                    <div class="col-md-12">
+                                        <div class="tech-card tech-card-inner glow-border-purple">
+                                            <div class="card-header tech-card-header">
+                                                <i class="fas fa-exchange-alt me-2"></i>利率敏感度分析
+                                                <div class="tech-border-glow"></div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="data-badge">
+                                                    <span id="leastSensitiveBadge" class="badge bg-info"><i class="fas fa-shield-alt me-1"></i>最穩定產品</span>
+                                                </div>
+                                                <table class="table table-striped tech-table" id="sensitivityTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>保單名稱</th>
+                                                            <th>降低5%的IRR</th>
+                                                            <th>目前IRR</th>
+                                                            <th>提高5%的IRR</th>
+                                                            <th>波動範圍</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <!-- 動態生成的敏感度表 -->
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 配息分析內容 - 完整實現 -->
+                            <div class="tab-pane fade" id="dividendAnalysis" role="tabpanel" aria-labelledby="dividend-tab">
+                                <div class="row mb-4">
+                                    <div class="col-md-6 animate__animated animate__fadeInLeft" style="animation-delay: 0.2s">
+                                        <div class="panel own-comparison-panel glow-border-green">
+                                            <div class="tech-frame top-left"></div>
+                                            <div class="tech-frame top-right"></div>
+                                            <div class="tech-frame bottom-left"></div>
+                                            <div class="tech-frame bottom-right"></div>
+                                            <div class="panel-title"><i class="fas fa-coins me-2"></i>年配息分析</div>
+                                            <div class="data-loading"></div>
+                                            
+                                            <table class="table table-striped table-hover tech-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>保單名稱</th>
+                                                        <th>配息率</th>
+                                                        <th>年配息金額</th>
+                                                        <th>排名</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="dividendTable">
+                                                    <!-- 動態生成的配息表 -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 animate__animated animate__fadeInRight" style="animation-delay: 0.2s">
+                                        <div class="panel glow-border-green">
+                                            <div class="tech-frame top-left"></div>
+                                            <div class="tech-frame top-right"></div>
+                                            <div class="tech-frame bottom-left"></div>
+                                            <div class="tech-frame bottom-right"></div>
+                                            <div class="panel-title"><i class="fas fa-chart-column me-2"></i>配息圖表比較</div>
+                                            <div class="data-loading"></div>
+                                            <div class="chart-container" style="height: 300px;">
+                                                <canvas id="dividendChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 配息累積效益分析 - 增加利息金額顯示 -->
+                                <div class="row mb-4 animate__animated animate__fadeInUp" style="animation-delay: 0.3s">
+                                    <div class="col-md-12">
+                                        <div class="panel glow-border-green">
+                                            <div class="tech-frame top-left"></div>
+                                            <div class="tech-frame top-right"></div>
+                                            <div class="tech-frame bottom-left"></div>
+                                            <div class="tech-frame bottom-right"></div>
+                                            <div class="panel-title"><i class="fas fa-history me-2"></i>配息累積效益分析 (20年)</div>
+                                            <div class="data-loading"></div>
+                                            <div class="chart-container" style="height: 300px;">
+                                                <canvas id="cumulativeDividendChart"></canvas>
+                                            </div>
+                                            
+                                            <div class="dividend-accumulation-container mt-4">
+                                                <h5><i class="fas fa-layer-group me-2"></i>20年配息累積效益表</h5>
+                                                <table class="table table-striped table-hover tech-table" id="cumulativeDividendTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>保單名稱</th>
+                                                            <th>累積配息總額</th>
+                                                            <th>利息收益</th>
+                                                            <th>總收益</th>
+                                                            <th>收益成長率</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <!-- 動態生成的累積配息表 -->
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 醫療保障分析內容 - 僅在有數據時顯示圖表 -->
+                            <div class="tab-pane fade" id="medicalAnalysis" role="tabpanel" aria-labelledby="medical-tab">
+                                <div class="row mb-4">
+                                    <div class="col-md-6 animate__animated animate__fadeInLeft" style="animation-delay: 0.2s">
+                                        <div class="tech-card tech-card-inner glow-border-pink">
+                                            <div class="card-header tech-card-header">
+                                                <i class="fas fa-heartbeat me-2"></i>醫療保障比較
+                                                <div class="tech-border-glow"></div>
+                                            </div>
+                                            <div class="card-body">
+                                                <table class="table table-striped tech-table" id="medicalTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>保單名稱</th>
+                                                            <th>包含醫療</th>
+                                                            <th>保障內容</th>
+                                                            <th>評分</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <!-- 動態生成的醫療表 -->
+                                                    </tbody>
+                                                </table>
+                                                
+                                                <!-- 無醫療數據時的提示 -->
+                                                <div id="noMedicalDataMessage" class="no-data-message" style="display: none;">
+                                                    <i class="fas fa-info-circle me-2"></i>尚未輸入醫療保障數據
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 animate__animated animate__fadeInRight" style="animation-delay: 0.2s">
+                                        <div class="tech-card tech-card-inner glow-border-pink">
+                                            <div class="card-header tech-card-header">
+                                                <i class="fas fa-notes-medical me-2"></i>醫療詳細評估
+                                                <div class="tech-border-glow"></div>
+                                            </div>
+                                            <div class="card-body" id="medicalDetails">
+                                                <!-- 醫療詳細資訊動態生成 -->
+                                                <div id="medicalDetailContent"></div>
+                                                
+                                                <!-- 醫療圖表 - 只有在有數據時才顯示 -->
+                                                <div id="medicalChartContainer" class="mt-4" style="display: none;">
+                                                    <h5 class="chart-title">醫療保障評分</h5>
+                                                    <div class="chart-container" style="height: 250px;">
+                                                        <canvas id="medicalChart"></canvas>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-4 animate__animated animate__fadeInUp" style="animation-delay: 0.3s">
+                                    <div class="col-md-12">
+                                        <div class="tech-card tech-card-inner glow-border-pink">
+                                            <div class="card-header tech-card-header">
+                                                <i class="fas fa-clipboard-check me-2"></i>醫療保障效益分析
+                                                <div class="tech-border-glow"></div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="alert alert-info" id="medicalEfficiencyAlert">
+                                                    <!-- 動態生成的醫療效益分析 -->
+                                                </div>
+                                                
+                                                <!-- 醫療詳細表格 -->
+                                                <div class="table-responsive mt-3">
+                                                    <table class="table table-striped tech-table" id="medicalDetailTable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>保單名稱</th>
+                                                                <th>重大疾病</th>
+                                                                <th>住院醫療</th>
+                                                                <th>手術醫療</th>
+                                                                <th>年醫療保費</th>
+                                                                <th>保障額度</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <!-- 動態生成的醫療詳細表 -->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 綜合評分內容 - 明確比較基準 -->
+                            <div class="tab-pane fade" id="comprehensiveAnalysis" role="tabpanel" aria-labelledby="comprehensive-tab">
+                                <div class="row mb-4">
+                                    <div class="col-md-12 animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
+                                        <!-- 明確比較基準說明 -->
+                                        <div class="comparison-base-info mb-4">
+                                            <i class="fas fa-info-circle"></i>
+                                            <strong>評分比較基準說明：</strong> 本評分系統以「自家保單」為基準值(10分)，計算各保單在不同維度上的相對表現。
+                                            各評分項目權重分配為：報酬率(35%)、配息(25%)、醫療保障(15%)和壽險保障(25%)。
+                                        </div>
+                                <span class="badge bg-primary text-white"><i class="fas fa-calendar-check me-1"></i><span id="reportDate"></span></span>
+                                <span class="badge bg-info text-white ms-2"><i class="fas fa-money-bill-wave me-1"></i><span id="reportCurrency">台幣 (TWD)</span></span>
+                            </div>
+                            
+                            <!-- 報告主要內容 -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="panel" style="height: 100%;">
+                                        <div class="tech-frame top-left"></div>
+                                        <div class="tech-frame top-right"></div>
+                                        <div class="tech-frame bottom-left"></div>
+                                        <div class="tech-frame bottom-right"></div>
+                                        <div class="panel-title"><i class="fas fa-star me-2"></i>分析結果摘要</div>
+                                        
+                                        <div id="reportSummary" class="mt-3">
+                                            <div class="kpi-card blue">
+                                                <div class="label">最佳保單選擇</div>
+                                                <div class="value" id="bestPolicyName">自家保單</div>
+                                            </div>
+                                            
+                                            <div class="row mt-3">
+                                                <div class="col-6">
+                                                    <div class="kpi-card green">
+                                                        <div class="label">綜合評分</div>
+                                                        <div class="value" id="bestPolicyScore">9.5</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="kpi-card">
+                                                        <div class="label">年化報酬率</div>
+                                                        <div class="value" id="bestPolicyIRR">3.2%</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div id="reportRecommendation" class="mt-4">
+                                                <h5 class="tech-bright-text">專業建議:</h5>
+                                                <p>根據您的風險偏好和財務需求分析，自家保單在報酬率和醫療保障方面表現優異，特別適合您的長期規劃。年化報酬率3.2%高於市場平均水平，建議選擇。</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="panel">
+                                        <div class="tech-frame top-left"></div>
+                                        <div class="tech-frame top-right"></div>
+                                        <div class="tech-frame bottom-left"></div>
+                                        <div class="tech-frame bottom-right"></div>
+                                        <div class="panel-title"><i class="fas fa-chart-pie me-2"></i>分析圖表</div>
+                                        
+                                        <div class="chart-container" style="height: 300px;">
+                                            <canvas id="reportComparisonChart"></canvas>
+                                            <div class="shimmer-effect"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <div class="panel">
+                                        <div class="tech-frame top-left"></div>
+                                        <div class="tech-frame top-right"></div>
+                                        <div class="tech-frame bottom-left"></div>
+                                        <div class="tech-frame bottom-right"></div>
+                                        <div class="panel-title"><i class="fas fa-table me-2"></i>詳細比較數據</div>
+                                        
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover tech-table" id="reportDetailTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>保單名稱</th>
+                                                        <th>年繳保費</th>
+                                                        <th>預定利率</th>
+                                                        <th>年配息</th>
+                                                        <th>期末解約金</th>
+                                                        <th>IRR</th>
+                                                        <th>醫療評分</th>
+                                                        <th>綜合評分</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <!-- 動態生成的報告詳細資料 -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between mt-4">
+                                <button type="button" class="btn btn-tech btn-secondary" id="backToComparison">
+                                    <i class="fas fa-arrow-left me-2"></i>返回比較表
+                                </button>
+                                <button type="button" class="btn btn-tech btn-primary" id="printReportBtn">
+                                    <i class="fas fa-print me-2"></i>列印報告
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="./ios-touch-fixes.js"></script>
+    <script src="./script.js"></script>
+    
+    <!-- 註冊Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker 註冊成功:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.error('Service Worker 註冊失敗:', error);
+                    });
+            });
+        }
+    </script>
+    
+    <script>
+        // 啟動畫面控制
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const splashScreen = document.getElementById('splashScreen');
+                splashScreen.style.opacity = '0';
+                setTimeout(function() {
+                    splashScreen.style.display = 'none';
+                }, 500);
+            }, 2500);
+            
+            // 禁用滾輪頁籤切換行為
+            document.querySelectorAll('.single-tab-content').forEach(tabContent => {
+                tabContent.addEventListener('wheel', function(e) {
+                    e.stopPropagation();
+                });
+                
+                // 防止iOS橡皮筋效果
+                tabContent.addEventListener('touchmove', function(e) {
+                    const scrollTop = this.scrollTop;
+                    const scrollHeight = this.scrollHeight;
+                    const height = this.clientHeight;
+                    
+                    if ((scrollTop <= 0 && e.touches[0].clientY > 0) || 
+                        (scrollTop + height >= scrollHeight && e.touches[0].clientY < 0)) {
+                        e.preventDefault();
+                    }
+                }, { passive: false });
+            });
+        });
+        
+        // 註冊Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker 註冊成功: ', registration.scope);
+                    })
+                    .catch(function(error) {
+                        console.log('ServiceWorker 註冊失敗: ', error);
+                    });
+            });
+        }
+        
+        // iPad專用操作調整
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.platform) || 
+                     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        
+        if (isIOS) {
+            // 修復iOS點擊延遲
+            document.documentElement.style.touchAction = 'manipulation';
+            
+            // 處理iPad導航返回手勢
+            window.addEventListener('popstate', function(event) {
+                // 防止離開應用
+                history.pushState(null, null, document.URL);
+            });
+            
+            // 初始推入歷史狀態
+            history.pushState(null, null, document.URL);
+            
+            // 阻止橡皮筋效果
+            document.body.addEventListener('touchmove', function(e) {
+                if (e.target.closest('.tab-content, .chart-container, table')) return;
+                e.preventDefault();
+            }, { passive: false });
+        }
+
+        // 方向變化偵測與處理
+        window.addEventListener('orientationchange', function() {
+            console.log('方向已變更：', window.orientation);
+            handleOrientationChange();
+        });
+        
+        // 初始檢查設備方向
+        document.addEventListener('DOMContentLoaded', function() {
+            checkOrientation();
+            
+            // 檢查是否為iPad
+            const isIPad = /iPad/.test(navigator.userAgent) || 
+                          (/Macintosh/i.test(navigator.userAgent) && 'ontouchend' in document);
+            
+            if (isIPad) {
+                document.body.classList.add('ipad-device');
+                applyIPadOptimizations();
+            }
+        });
+        
+        function checkOrientation() {
+            if (window.innerWidth > window.innerHeight) {
+                document.body.classList.add('landscape');
+                document.body.classList.remove('portrait');
+            } else {
+                document.body.classList.add('portrait');
+                document.body.classList.remove('landscape');
+            }
+        }
+        
+        function handleOrientationChange() {
+            document.body.classList.add('orientation-change');
+            checkOrientation();
+            
+            setTimeout(function() {
+                document.body.classList.remove('orientation-change');
+                
+                // 重新佈局圖表
+                if (window.irrChartInstance) {
+                    window.irrChartInstance.resize();
+                }
+                if (window.dividendChartInstance) {
+                    window.dividendChartInstance.resize();
+                }
+                if (window.radarChartInstance) {
+                    window.radarChartInstance.resize();
+                }
+            }, 500);
+        }
+        
+        function applyIPadOptimizations() {
+            // 調整按鈕大小
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.style.padding = '12px 20px';
+            });
+            
+            // 改善觸控區域
+            document.querySelectorAll('.form-check-input').forEach(input => {
+                input.style.width = '24px';
+                input.style.height = '24px';
+            });
+            
+            // 滾動優化
+            document.querySelectorAll('.tab-pane').forEach(pane => {
+                pane.style.overflowY = 'auto';
+                pane.style.webkitOverflowScrolling = 'touch';
+            });
+        }
+
+        // 確保頁籤正確初始化和切換
+        document.addEventListener('DOMContentLoaded', function() {
+            // 完全重寫頁籤事件，不依賴Bootstrap自動初始化
+            const tabList = document.querySelectorAll('#analysisTab .nav-link');
+            tabList.forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation(); // 阻止事件冒泡
+                    
+                    // 跳過已禁用的頁籤
+                    if (this.hasAttribute('disabled')) {
+                        return false;
+                    }
+                    
+                    // 移除所有active類
+                    tabList.forEach(t => {
+                        t.classList.remove('active');
+                        t.setAttribute('aria-selected', 'false');
+                        const pane = document.querySelector(t.getAttribute('data-bs-target'));
+                        if (pane) {
+                            pane.classList.remove('show', 'active');
+                        }
+                    });
+                    
+                    // 設置當前tab為active
+                    this.classList.add('active');
+                    this.setAttribute('aria-selected', 'true');
+                    const target = document.querySelector(this.getAttribute('data-bs-target'));
+                    if (target) {
+                        target.classList.add('show', 'active');
+                        
+                        // 滾動到頂部，但不改變頁籤
+                        setTimeout(() => {
+                            if (target.scrollTo) {
+                                target.scrollTo(0, 0);
+                            } else {
+                                target.scrollTop = 0;
+                            }
+                        }, 10);
+                    }
+                    
+                    // 更新進度條
+                    const tabId = this.id.replace('-tab', '');
+                    updateProgressBar(tabId);
+                    
+                    return false;
+                });
+            });
+            
+            // 修復iPad頁籤觸控問題
+            if (/iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
+                // 停止任何可能發生冒泡的點擊事件
+                document.querySelectorAll('.nav-tabs .nav-link, .nav-pills .nav-link').forEach(link => {
+                    link.addEventListener('touchend', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.click(); // 手動觸發點擊
+                    }, {passive: false});
+                });
+                
+                // 防止頁籤外觸摸事件引起的滾動問題
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.addEventListener('touchmove', function(e) {
+                        // 允許子元素內部滾動
+                        if (!e.target.closest('.single-tab-content, .chart-container, table')) {
+                            e.preventDefault();
+                        }
+                    }, {passive: false});
+                });
+            }
+        });
+        
+        // 自定義頁籤切換函數 - 完全重寫以避免依賴Bootstrap
+        function switchTab(tabId) {
+            // 獲取對應的頁籤元素
+            const tabElement = document.getElementById(`${tabId}-tab`);
+            
+            if (tabElement && !tabElement.hasAttribute('disabled')) {
+                // 直接調用點擊事件處理函數
+                const clickEvent = new MouseEvent('click', {
+                    bubbles: false,
+                    cancelable: true
+                });
+                tabElement.dispatchEvent(clickEvent);
+                
+                // 平滑滾動到頂部
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        // 在頁面載入完成後重新應用iOS修復
+        document.addEventListener('DOMContentLoaded', function() {
+            // 檢查是否為iOS設備
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+                        
+            if (isIOS && window.iOSTouchFixes) {
+                // 將所有內容區塊標記為允許滾動
+                document.querySelectorAll('.single-tab-content, .tab-pane').forEach(el => {
+                    el.classList.add('allow-scroll');
+                });
+                
+                // 應用iOS觸控修復
+                setTimeout(() => {
+                    window.iOSTouchFixes.reapply();
+                }, 300);
+            }
+        });
+
+        // 檢測iPad設備並標記
+        document.addEventListener("DOMContentLoaded", function() {
+            // 檢測設備
+            const isIPad = /iPad/.test(navigator.userAgent) || 
+                           (/Macintosh/i.test(navigator.platform) && navigator.maxTouchPoints > 1);
+                           
+            // 如果是iPad，添加類并初始化布局
+            if (isIPad) {
+                document.documentElement.classList.add('ipad-device');
+                
+                // 檢測初始方向
+                const isLandscape = window.innerWidth > window.innerHeight;
+                document.documentElement.classList.add(isLandscape ? 'ios-landscape' : 'ios-portrait');
+                
+                // 標記所有圖表行
+                document.querySelectorAll('.row:has(.chart-container)').forEach(row => {
+                    row.classList.add('chart-row');
+                });
+                
+                // 監聽方向變化
+                window.addEventListener('orientationchange', handleOrientationChange);
+                window.addEventListener('resize', debounceOrientationCheck);
+            }
+            
+            function handleOrientationChange() {
+                setTimeout(() => {
+                    const isLandscape = window.innerWidth > window.innerHeight;
+                    document.documentElement.classList.toggle('ios-landscape', isLandscape);
+                    document.documentElement.classList.toggle('ios-portrait', !isLandscape);
+                    
+                    // 如果有圖表實例，重新調整尺寸
+                    if (window.Chart) {
+                        Object.values(Chart.instances || {}).forEach(chart => chart.resize());
+                    }
+                }, 300);
+            }
+            
+            let orientationTimeout;
+            function debounceOrientationCheck() {
+                clearTimeout(orientationTimeout);
+                orientationTimeout = setTimeout(() => {
+                    const isLandscape = window.innerWidth > window.innerHeight;
+                    document.documentElement.classList.toggle('ios-landscape', isLandscape);
+                    document.documentElement.classList.toggle('ios-portrait', !isLandscape);
+                }, 200);
+            }
+        });
+    </script>
+
+</body>
+</html>
