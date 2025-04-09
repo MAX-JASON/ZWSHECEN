@@ -44,6 +44,14 @@
         height: 100%;
         overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
+        touch-action: manipulation;
+    }
+    
+    /* 确保图标正确显示 */
+    .fas, .fab, .far {
+        font-size: 24px;
+        min-width: 30px;
+        text-align: center;
     }
     
     body {
@@ -64,6 +72,9 @@
         margin-bottom: 20px;
         min-height: auto;
         padding: 20px;
+        width: 100%;
+        box-sizing: border-box;
+        transform: none !important;
     }
     
     .btn-tech {
@@ -110,6 +121,61 @@
     /* 高级分析选项区域调整 */
     .tech-card-advanced {
         padding: 20px;
+        width: 100%;
+        box-sizing: border-box;
+        margin: 0 auto;
+        max-width: 100%;
+        transform: none !important;
+    }
+    
+    .tech-card-advanced .card-body {
+        padding: 15px;
+        max-height: 70vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .tech-card-advanced .row {
+        margin-left: -10px;
+        margin-right: -10px;
+    }
+    
+    .tech-card-advanced .col-md-4,
+    .tech-card-advanced .col-md-6 {
+        padding-left: 10px;
+        padding-right: 10px;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    
+    /* 确保表单元素在 iPad 上有足够的触摸区域 */
+    .tech-card-advanced .form-check-label,
+    .tech-card-advanced .form-label {
+        font-size: 16px;
+        padding: 8px 0;
+        display: block;
+    }
+    
+    .tech-card-advanced .form-control,
+    .tech-card-advanced .form-select,
+    .tech-card-advanced .form-range {
+        min-height: 44px;
+        font-size: 16px;
+        padding: 10px 15px;
+    }
+    
+    .tech-card-advanced .form-check-input {
+        width: 20px;
+        height: 20px;
+        margin-top: 0.3em;
+    }
+    
+    .tech-card-advanced .form-check {
+        margin-bottom: 15px;
+    }
+    
+    .tech-card-advanced .tech-divider {
+        margin: 20px 0;
     }
     
     /* 标题调整 */
@@ -475,24 +541,4 @@ body {
     background-color: rgba(0, 255, 157, 0.25);
 }
 
-/* 按鈕樣式 */
-.btn-tech {
-    background-color: rgba(0, 229, 255, 0.1);
-    border: 1px solid var(--accent-blue);
-    color: var(--accent-blue);
-    padding: 8px 15px;
-    border-radius: 4px;
-    transition: all 0.2s ease;
-    text-transform: uppercase;
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 8px;
-}
-
-.btn-tech:hover {
-    background-color: rgba(0, 229, 255, 0.3);
-    box-shadow: 0 0 15px var(--accent-blue-glow);
-}
+/* 按鈕樣式
